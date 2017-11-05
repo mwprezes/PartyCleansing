@@ -18,6 +18,7 @@ public class StoringItems : MonoBehaviour
 		offset = new Vector3(0,0,0);
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
+        stored = null;
     }
 
     void OnMouseOver()
@@ -42,6 +43,7 @@ public class StoringItems : MonoBehaviour
         if (stored == null)
         {
             stored = obj;
+            stored.tag = "Stored";
             stored.transform.parent = this.transform;
             stored.transform.localPosition = offset;
             stored.GetComponent<Rigidbody>().isKinematic = true;
@@ -52,6 +54,7 @@ public class StoringItems : MonoBehaviour
     {
         if (stored != null)
         {
+            stored.tag = "Pickable";
             stored.transform.parent = this.transform;
             stored.transform.localPosition = offset;
             stored.GetComponent<Rigidbody>().isKinematic = true;
@@ -63,10 +66,10 @@ public class StoringItems : MonoBehaviour
 
             stored = null;
         }
-        else
+        /*else // SendMessage nie może wysyłać null
         {
             whosLooking = GameObject.Find(who);
             whosLooking.SendMessage("ReciveItem", stored);
-        }
+        }*/
     }
 }

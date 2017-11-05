@@ -30,6 +30,15 @@ public class Ballon : MonoBehaviour
             other.transform.localPosition = offset;
             other.GetComponent<Rigidbody>().isKinematic = true;
             PlayerController.Carried_Weight = 0;
+            MeshRenderer[] tip = gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach(MeshRenderer ren in tip)
+            {
+                if (ren.gameObject.transform.parent != null && ren.gameObject.tag == "Untagged")
+                {
+                    ren.enabled = false;
+                    Debug.Log("Stuck");
+                }
+            } 
             Fly();
         }
     }
