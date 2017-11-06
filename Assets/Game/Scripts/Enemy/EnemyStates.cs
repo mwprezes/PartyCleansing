@@ -28,7 +28,8 @@ public class EnemyStates : MonoBehaviour {
 	private bool HintShow = false;
     private string HintText = "";
 
-	void Awake(){
+	void Awake()
+	{
 		waitState = new WaitState (this);
 		lookForState = new LookForState (this);
 		searchState = new SearchState (this);
