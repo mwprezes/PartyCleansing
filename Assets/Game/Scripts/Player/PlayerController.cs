@@ -25,12 +25,12 @@ public class PlayerController : MonoBehaviour {
 	public GUIText tipGUI;
 	public TextEditor text;
     static public int Score = 0;
-    static public int Carried_Weight = 0;
+    public float Carried_Weight;
 
     // Use this for initialization
     void Start () {
         rig = GetComponent<Rigidbody>();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -38,9 +38,9 @@ public class PlayerController : MonoBehaviour {
         float hAxis = Input.GetAxis("Horizontal");
         float vAxis = Input.GetAxis("Vertical");
 
-        Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
+        Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime; 
 
-	    cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(cameraRay, out cameraRayHit))
 	    {
 	            if (cameraRayHit.transform.tag == "Ground")
@@ -49,8 +49,10 @@ public class PlayerController : MonoBehaviour {
 	                transform.LookAt(targetPosition);
 	            }
 	    }
-
-        rig.MovePosition(transform.position + movement);
+        if (heldObj != null) Carried_Weight = heldObj.GetComponent<GrabAndDrop>().Weight;
+            
+        if (Carried_Weight <= 1) rig.MovePosition(transform.position + movement);
+        else rig.MovePosition(transform.position + movement * (1 / Carried_Weight));
 
         // Pick up and drop
         if (isHolding)
@@ -59,7 +61,6 @@ public class PlayerController : MonoBehaviour {
             {
                 if (storage != null && !storageFull)
                 {
-                    Score = Score + heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
                     heldObj.isKinematic = false;
                     heldObj.transform.parent = null;
                     isHolding = false;
@@ -73,7 +74,6 @@ public class PlayerController : MonoBehaviour {
                     
                     if (heldObj.GetComponent<GrabAndDrop>().Weight <= combine.GetComponent<Combination>().AllowedWeight)
                     {
-                        Score = Score + heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
                         heldObj.isKinematic = false;
                         heldObj.transform.parent = null;
                         isHolding = false;
@@ -250,6 +250,7 @@ public class PlayerController : MonoBehaviour {
     void Bust()
     {
         Debug.Log("I am Busted!");
+        Score = Score - heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
         //GameObject held = this.transform.Find("Pickable").gameObject;
         //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
         heldObj.isKinematic = false;

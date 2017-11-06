@@ -12,7 +12,7 @@ public class GrabAndDrop : MonoBehaviour
     static public bool onObj = false;
 
     public int Score_for_Item;
-    public int Weight;
+    public float Weight;
 
     // Use this for initialization
     void Start()
@@ -25,6 +25,7 @@ public class GrabAndDrop : MonoBehaviour
     {
         onObj = true;
         render.material.color = OnMouseColor;
+        
     }
 
     void OnMouseExit()
@@ -35,11 +36,11 @@ public class GrabAndDrop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
     public void SetScore(int score_for_this_item)
     {
-        Score_for_Item = score_for_this_item;
+        PlayerController.Score = PlayerController.Score + score_for_this_item;
+        
     }
 }

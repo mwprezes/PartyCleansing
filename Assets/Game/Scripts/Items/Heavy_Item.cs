@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Heavy_Item : MonoBehaviour
 {
-        void Update()
+        void Start()
     {
+        this.GetComponent<GrabAndDrop>().SetScore(3);
         this.GetComponent<GrabAndDrop>().Score_for_Item = 3;
-        this.GetComponent<GrabAndDrop>().Weight = 4;
+        this.GetComponent<GrabAndDrop>().Weight = 5/2;
     }
  }
