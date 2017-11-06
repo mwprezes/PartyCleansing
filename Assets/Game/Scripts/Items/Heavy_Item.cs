@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Heavy_Item : MonoBehaviour
 {
-        void Update()
+        void Start()
     {
         this.GetComponent<GrabAndDrop>().Score_for_Item = 3;
         this.GetComponent<GrabAndDrop>().Weight = 4;
