@@ -25,6 +25,8 @@ public class EnemyStates : MonoBehaviour {
 	public NavMeshAgent navMeshAgent;
 	[HideInInspector]
 
+	private bool HintShow = false;
+    private string HintText = "";
 
 	void Awake(){
 		waitState = new WaitState (this);
@@ -37,6 +39,10 @@ public class EnemyStates : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		currentState = waitState;
+		
+		HintShow = true;
+        HintText = "Knock, Knock!";
+        StartCoroutine(Wait());
 	}
 	
 	// Update is called once per frame
@@ -48,9 +54,30 @@ public class EnemyStates : MonoBehaviour {
 		currentState.OnTriggerEnter(otherObj);
 	}
 
+		   void OnGUI()
+    {
+        if (HintShow)
+        {
+            GUI.color = Color.white;
+            var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
+        }
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(2.0f);
+        HintText = "";
+    }
+	
+	
     private void pickUp(GameObject body)
     {
         Debug.Log("#Enemy: Woosh!");
+		
+		HintText = "Whoosh!";
+        StartCoroutine(Wait());
+		
         body.gameObject.transform.parent = this.transform;
         body.gameObject.transform.localPosition = new Vector3(0, 0, 2);
         body.GetComponent<Rigidbody>().isKinematic = true;
@@ -66,11 +93,17 @@ public class EnemyStates : MonoBehaviour {
         {
             Debug.Log("#Enemy: Znaleziony");
             pickUp(rec);
+			
+			 HintText = "Ha! Found YOU!";
+            StartCoroutine(Wait());
 
         }
         else
         {
             Debug.Log("#Enemy: Pusto");
+			
+			HintText = "Empty...";
+            StartCoroutine(Wait());
         }
     }
 }

@@ -29,10 +29,19 @@ public class PlayerController : MonoBehaviour {
 	public TextEditor text;
     static public int Score = 0;
     public float Carried_Weight;
+	
+	// Olsza's HINTS 
+    public bool HintShow = false;
+    private string HintText = "";
 
     // Use this for initialization
     void Start () {
         rig = GetComponent<Rigidbody>();
+		
+		HintShow = true;
+        HintText = "Quick. I gotta clean this up! ";
+        StartCoroutine(Wait());
+		
     }
 	
 	// Update is called once per frame
@@ -66,6 +75,10 @@ public class PlayerController : MonoBehaviour {
                     heldObj.transform.parent = null;
                     isHolding = false;
                     Debug.Log("Stored!");
+					
+					HintText = "Uff, it's hiden!";
+                    StartCoroutine(Wait());
+					
                     storage.SendMessage("Store", heldObj.gameObject);
                     heldObj = null;
                     //potentialHeldObj = null;
@@ -80,12 +93,21 @@ public class PlayerController : MonoBehaviour {
                         heldObj.transform.parent = null;
                         isHolding = false;
                         Debug.Log("Combined!");
+						
+						 HintText = "Yey, combined!";
+                        StartCoroutine(Wait());
+						
                         combine.SendMessage("ItemForCombination", heldObj.gameObject);
                         heldObj = null;
                         //potentialHeldObj = null;
                         Carried_Weight = 0;
                     }
-                    else Debug.Log("TOO HEAVY!");
+                    else
+					{
+                        Debug.Log("TOO HEAVY!");
+                        HintText = "Nope, It's too heavy!";
+                        StartCoroutine(Wait());
+                    }
                 }
                 else if (storage == null && combine == null)
                 {
@@ -144,10 +166,26 @@ public class PlayerController : MonoBehaviour {
 		this.showTip = true;
 	}
 
+	
+		  IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(2.0f);
+        HintText = "";
+    }
+	
+	
     void OnGUI()
     {
         GUI.color = Color.magenta;
         GUI.Label(new Rect(10, 10, 100, 100), "Score: " + Score);
+		
+		 if (HintShow)
+        {
+            GUI.color = Color.white;
+            var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+            GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
+        }
+		
     }
 
     // Pick up / Store
@@ -195,6 +233,10 @@ public class PlayerController : MonoBehaviour {
         {
             displayTipMessage("Pick me up!");
             Debug.Log("You can pick it up!");
+			
+			HintText = "'F' to pick up!";
+            StartCoroutine(Wait());
+			
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
         if (hit.gameObject.tag == "Storage")
@@ -205,11 +247,24 @@ public class PlayerController : MonoBehaviour {
             {
                 storageFull = false;
                 Debug.Log("You can store stuff!");
+				
+				if(isHolding)
+                {
+                    HintText = "'F' to hide";
+                    StartCoroutine(Wait());
+                }
+				
             }
             else
             {
                 storageFull = true;
                 Debug.Log("This one is full!");
+				
+				if(isHolding)
+				{
+                    HintText = "Nope, It's full";
+                    StartCoroutine(Wait());
+                }
                 //storage = null;
             }
         }
@@ -217,6 +272,9 @@ public class PlayerController : MonoBehaviour {
         {
             combine = hit.gameObject;
             Debug.Log("Combination time!");
+			
+			 HintText = " 'F' to combine!";
+            StartCoroutine(Wait());
         }
     }
 
@@ -301,6 +359,10 @@ public class PlayerController : MonoBehaviour {
     void Bust()
     {
         Debug.Log("I am Busted!");
+		
+		 HintText = "OH ON! I'm busted! :C";
+        StartCoroutine(Wait());
+		
 		Score = Score - heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
         //GameObject held = this.transform.Find("Pickable").gameObject;
         //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
