@@ -24,12 +24,12 @@ public class Ballon : MonoBehaviour
 
     public void Combine()
     {
-        if ((other != null) && (PlayerController.Carried_Weight < 3))
+        if ((other != null) && (other.GetComponent<PlayerController>().Carried_Weight < 3))
         {
             other.transform.parent = this.transform;
             other.transform.localPosition = offset;
             other.GetComponent<Rigidbody>().isKinematic = true;
-            PlayerController.Carried_Weight = 0;
+            other.GetComponent<PlayerController>().Carried_Weight = 0;
             MeshRenderer[] tip = gameObject.GetComponentsInChildren<MeshRenderer>();
             foreach(MeshRenderer ren in tip)
             {

@@ -62,8 +62,6 @@ public class StoringItems : MonoBehaviour
             whosLooking = GameObject.Find(who);
             whosLooking.SendMessage("ReciveItem", stored);
 
-            PlayerController.Score = PlayerController.Score - stored.GetComponent<GrabAndDrop>().Score_for_Item;
-
             stored = null;
         }
         /*else // SendMessage nie może wysyłać null

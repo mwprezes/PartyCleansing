@@ -78,7 +78,7 @@ public class LookForState : IEnemyAI
             Debug.Log("#Enemy: Co to za balagan?!");
             if (hit.tag != "Busted")
             {
-                hit.GetComponent<GrabAndDrop>().Score_for_Item /= 2;
+                PlayerController.Score = PlayerController.Score - hit.GetComponent<GrabAndDrop>().Score_for_Item;
                 hit.tag = "Busted";
             }
         }

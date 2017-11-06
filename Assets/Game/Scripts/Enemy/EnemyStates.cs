@@ -57,12 +57,7 @@ public class EnemyStates : MonoBehaviour {
 
         body.gameObject.transform.parent = null;
         body.GetComponent<Rigidbody>().isKinematic = false;
-        PlayerController.Score = PlayerController.Score - body.GetComponent<GrabAndDrop>().Score_for_Item;
-        if (body.tag != "Busted")
-        {
-            body.GetComponent<GrabAndDrop>().Score_for_Item /= 2;
-            body.tag = "Busted";
-        }
+        if (body.tag != "Busted") body.tag = "Busted";
     }
 
     public void ReciveItem(GameObject rec)
