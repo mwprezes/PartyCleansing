@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
                         heldObj.transform.parent = null;
                         isHolding = false;
                         //WaitASecond("Combined");
+                        
                         Debug.Log("Combined!");
 
                         HintText = "Yey, combined!";

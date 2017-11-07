@@ -11,7 +11,7 @@ public class Brick : MonoBehaviour {
 
     void Start()
     {
-        offset = new Vector3(0, -1, 0);
+        offset = new Vector3(1, 0, 0);
         this.GetComponent<Combination>().AllowedWeight = 3;
         weight = 10;
     }
@@ -25,7 +25,7 @@ public class Brick : MonoBehaviour {
         if ((other != null) && (other.GetComponent<GrabAndDrop>().Weight < 3))
         {
             this.transform.parent = other.transform;
-            this.transform.localPosition = offset;
+            //this.transform.localPosition = offset;
             this.GetComponent<Rigidbody>().isKinematic = true;
             //other.GetComponent<PlayerController>().Carried_Weight = itm.Weight;
             itm.Weight = weight;

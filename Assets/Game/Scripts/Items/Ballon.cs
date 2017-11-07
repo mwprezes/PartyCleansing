@@ -11,7 +11,7 @@ public class Ballon : MonoBehaviour
 
     void Start()
     {
-        offset = new Vector3(0, -2, 0);
+        offset = new Vector3(0, 0, -1);
         fly = false;
         this.GetComponent<Combination>().AllowedWeight = 3;
     }
