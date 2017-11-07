@@ -2,44 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SearchState : IEnemyAI {
+public class SearchState : IEnemyAI
+{
 
-	EnemyStates enemy;
-	public GameObject storage;
+    EnemyStates enemy;
+    public GameObject storage;
 
-	public SearchState(EnemyStates enemy)
-	{
-		this.enemy = enemy;
-	}
+    public SearchState(EnemyStates enemy)
+    {
+        this.enemy = enemy;
+    }
 
-	public void UpdateActions(){
-		enemy.navMeshAgent.isStopped = true;
-		Search ();
-		//ToWaitState ();
-		ToLookForState();
-	}
+    public void UpdateActions()
+    {
+        enemy.navMeshAgent.isStopped = true;
+        Search();
+        ToWaitState();
+    }
 
-	public void Search(){
-		if(storage != null)
+    public void Search()
+    {
+        if (storage != null)
         {
-            Debug.Log("#Enemy: Zobaczmy co jest w srodku");
-			storage.SendMessage ("GiveItem", this.enemy.name);
+            Debug.Log("#Enemy: Zobaczmy co jest w srodku w tej szafunci");
+            storage.SendMessage("GiveItem", this.enemy.name);
         }
-	}
+    }
 
-	public void OnTriggerEnter(Collider enemy){
+    public void OnTriggerEnter(Collider enemy)
+    {
 
-	}
+    }
 
-	public void ToWaitState(){
-		enemy.currentState = enemy.waitState;
-	}
+    public void ToFirstWaitState()
+    {
+        enemy.currentState = enemy.firstWaitState;
+    }
 
-	public void ToLookForState(){
-		enemy.currentState = enemy.lookForState;
-	}
+    public void ToWaitState()
+    {
+        enemy.currentState = enemy.waitState;
+    }
 
-	public void ToSearchState(){
-		Debug.Log ("#Enemy: A co my tu mamy?");
-	}
+    public void ToLookForState()
+    {
+        enemy.currentState = enemy.lookForState;
+    }
+
+    public void ToSearchState()
+    {
+        Debug.Log("#Enemy: A co my tu mamy?");
+    }
 }

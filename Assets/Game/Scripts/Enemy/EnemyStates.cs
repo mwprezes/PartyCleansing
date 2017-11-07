@@ -3,59 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyStates : MonoBehaviour {
+public class EnemyStates : MonoBehaviour
+{
 
-	public Transform[] waypoints;
-	public int whereStorageRange;
-	public int maxTime;
+    public Transform[] waypoints;
+    public int whereStorageRange;
+    public int maxTime;
 
     [HideInInspector]
     public int wayAllNumber;
     [HideInInspector]
     public int patientLevel = 0;
-	[HideInInspector] 
-	public WaitState waitState;
-	[HideInInspector]
-	public LookForState lookForState;
-	[HideInInspector]
-	public SearchState searchState;
-	[HideInInspector]
-	public IEnemyAI currentState;
-	[HideInInspector]
-	public NavMeshAgent navMeshAgent;
-	[HideInInspector]
+    [HideInInspector]
+    public FirstWaitState firstWaitState;
+    [HideInInspector]
+    public LookForState lookForState;
+    [HideInInspector]
+    public SearchState searchState;
+    [HideInInspector]
+    public WaitState waitState;
+    [HideInInspector]
+    public IEnemyAI currentState;
+    [HideInInspector]
+    public NavMeshAgent navMeshAgent;
+    [HideInInspector]
 
-	private bool HintShow = false;
+    private bool HintShow = false;
     private string HintText = "";
 
-	void Awake()
-	{
-		waitState = new WaitState (this);
-		lookForState = new LookForState (this);
-		searchState = new SearchState (this);
-		navMeshAgent = GetComponent<NavMeshAgent> ();
-	}
+    void Awake()
+    {
+        firstWaitState = new FirstWaitState(this);
+        lookForState = new LookForState(this);
+        searchState = new SearchState(this);
+        waitState = new WaitState(this);
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
 
 
-	// Use this for initialization
-	void Start () {
-		currentState = waitState;
-		
-		HintShow = true;
+    // Use this for initialization
+    void Start()
+    {
+        currentState = firstWaitState;
+
+        HintShow = true;
         HintText = "Knock, Knock!";
         StartCoroutine(Wait());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		currentState.UpdateActions ();
-	}
+    }
 
-	void OnTriggerEnter (Collider otherObj){
-		currentState.OnTriggerEnter(otherObj);
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        currentState.UpdateActions();
+    }
 
-		   void OnGUI()
+    void OnTriggerEnter(Collider otherObj)
+    {
+        currentState.OnTriggerEnter(otherObj);
+    }
+
+    void OnGUI()
     {
         if (HintShow)
         {
@@ -70,15 +77,15 @@ public class EnemyStates : MonoBehaviour {
         yield return new WaitForSeconds(2.0f);
         HintText = "";
     }
-	
-	
+
+
     private void pickUp(GameObject body)
     {
         Debug.Log("#Enemy: Woosh!");
-		
-		HintText = "Whoosh!";
+
+        HintText = "Whoosh!";
         StartCoroutine(Wait());
-		
+
         body.gameObject.transform.parent = this.transform;
         body.gameObject.transform.localPosition = new Vector3(0, 0, 2);
         body.GetComponent<Rigidbody>().isKinematic = true;
@@ -94,16 +101,16 @@ public class EnemyStates : MonoBehaviour {
         {
             Debug.Log("#Enemy: Znaleziony");
             pickUp(rec);
-			
-			 HintText = "Ha! Found YOU!";
+
+            HintText = "Ha! Found YOU!";
             StartCoroutine(Wait());
 
         }
         else
         {
             Debug.Log("#Enemy: Pusto");
-			
-			HintText = "Empty...";
+
+            HintText = "Empty...";
             StartCoroutine(Wait());
         }
     }

@@ -18,27 +18,27 @@ public class Ballon : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(fly)
+        if (fly)
             this.GetComponent<Rigidbody>().AddForce(new Vector3(0, 1, 0));
     }
 
     public void Combine()
     {
-        if ((other != null) && (other.GetComponent<PlayerController>().Carried_Weight < 3))
+        if ((other != null) && (other.GetComponent<GrabAndDrop>().Weight < 3))
         {
             other.transform.parent = this.transform;
             other.transform.localPosition = offset;
             other.GetComponent<Rigidbody>().isKinematic = true;
-            other.GetComponent<PlayerController>().Carried_Weight = 0;
+            //other.GetComponent<PlayerController>().Carried_Weight = 0;
             MeshRenderer[] tip = gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach(MeshRenderer ren in tip)
+            foreach (MeshRenderer ren in tip)
             {
                 if (ren.gameObject.transform.parent != null && ren.gameObject.tag == "Untagged")
                 {
                     ren.enabled = false;
                     Debug.Log("Stuck");
                 }
-            } 
+            }
             Fly();
         }
     }

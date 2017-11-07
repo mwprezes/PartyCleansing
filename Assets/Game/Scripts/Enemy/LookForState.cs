@@ -105,6 +105,11 @@ public class LookForState : IEnemyAI
         store = null;
     }
 
+    public void ToFirstWaitState()
+    {
+        enemy.currentState = enemy.firstWaitState;
+    }
+
     public void ToWaitState()
     {
         enemy.currentState = enemy.waitState;

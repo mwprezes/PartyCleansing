@@ -22,12 +22,12 @@ public class Brick : MonoBehaviour {
 
     public void Combine()
     {
-        if ((other != null) && (other.GetComponent<PlayerController>().Carried_Weight < 3))
+        if ((other != null) && (other.GetComponent<GrabAndDrop>().Weight < 3))
         {
             this.transform.parent = other.transform;
             this.transform.localPosition = offset;
             this.GetComponent<Rigidbody>().isKinematic = true;
-            other.GetComponent<PlayerController>().Carried_Weight = itm.Weight;
+            //other.GetComponent<PlayerController>().Carried_Weight = itm.Weight;
             itm.Weight = weight;
         }
     }
