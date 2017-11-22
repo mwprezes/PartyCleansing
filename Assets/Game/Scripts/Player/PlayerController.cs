@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     Ray cameraRay;
     RaycastHit cameraRayHit;
 
+    //Pkt akcji
+    public int actionPoints = 2;
+
     //Wskazówka
     private int Check_Weight;
     private bool showTip = false;
@@ -403,5 +406,14 @@ public class PlayerController : MonoBehaviour
         isHolding = false;
         Carried_Weight = 0;
 
+    }
+
+    IEnumerator Stun(float time)
+    {
+        this.enabled = false;
+
+        yield return new WaitForSeconds(time);
+
+        this.enabled = true;
     }
 }

@@ -8,6 +8,10 @@ public class StoringItems : MonoBehaviour
 
     public List<GameObject> Storage;
     public bool storagefull = false;
+    public bool temperedWith = false;
+    public bool locked = false;
+    public bool boobytraped = false;
+    public string trapName = null;
 
     public GameObject stored;
     public Vector3 offset;
@@ -45,39 +49,54 @@ public class StoringItems : MonoBehaviour
 		
 	}
 
+    public void Temper(string type)
+    {
+        switch (type)
+        {
+            case "Lock":
+                locked = true; break;
+            case "Trap":
+                boobytraped = true; break;
+        }
+    }
+
     void Store(GameObject obj)
     {
-
-        if (Storage.Count.Equals(0))
+        if (!locked)
         {
-            Storage.Add(obj);
-
-            foreach (GameObject ob in Storage)
-            {
-                ob.tag = "Stored";
-                ob.transform.parent = this.transform;
-                ob.transform.localPosition = offset;
-                ob.GetComponent<Rigidbody>().isKinematic = true;
-            }
-
-
-            if (Storage.ElementAt(0).GetComponent<GrabAndDrop>().Weight == 4)
-                storagefull = true;
-        }
-        else if (Storage.Count.Equals(1) && !storagefull)
-        {
-
-            if (obj.GetComponent<GrabAndDrop>().Weight < 2)
+            if (Storage.Count.Equals(0) && !storagefull)
             {
                 Storage.Add(obj);
-                Storage.ElementAt(1).tag = "Stored";
-                Storage.ElementAt(1).transform.parent = this.transform;
-                Storage.ElementAt(1).transform.localPosition = offset;
-                Storage.ElementAt(1).GetComponent<Rigidbody>().isKinematic = true;
-            }
-            storagefull = true;
-        }
 
+                foreach (GameObject ob in Storage)
+                {
+                    ob.tag = "Stored";
+                    ob.transform.parent = this.transform;
+                    ob.transform.localPosition = offset;
+                    ob.GetComponent<Rigidbody>().isKinematic = true;
+                }
+
+
+                if (Storage.ElementAt(0).GetComponent<GrabAndDrop>().Weight == 4)
+                    storagefull = true;
+            }
+            else if (Storage.Count.Equals(1) && !storagefull)
+            {
+
+                if (obj.GetComponent<GrabAndDrop>().Weight < 2)
+                {
+                    Storage.Add(obj);
+                    Storage.ElementAt(1).tag = "Stored";
+                    Storage.ElementAt(1).transform.parent = this.transform;
+                    Storage.ElementAt(1).transform.localPosition = offset;
+                    Storage.ElementAt(1).GetComponent<Rigidbody>().isKinematic = true;
+                }
+                storagefull = true;
+            }
+        } else
+        {
+            Debug.Log("It is locked!");
+        }
 
         /*
         if (stored == null)
@@ -105,8 +124,16 @@ public class StoringItems : MonoBehaviour
 
             Storage.RemoveAt(1);
         }*/
-        
-        if (Storage.Any())
+        if (locked || boobytraped)
+        {
+            whosLooking = GameObject.Find(who);
+            var trap = this.GetComponent(trapName);
+            trap.SendMessage("Activate", whosLooking);
+            boobytraped = false;
+            //temperedWith = false;
+            //return;
+        }
+        if (Storage.Any() && !locked)
         {
 
             if (Storage.Count.Equals(2))
@@ -136,7 +163,10 @@ public class StoringItems : MonoBehaviour
                 storagefull = false;          
             }
 
-
+        } else if (locked)
+        {
+            Debug.Log("It is locked!");
+            //Lockpicking?...
         }
 
         
