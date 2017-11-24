@@ -32,13 +32,13 @@ public class StoringItems : MonoBehaviour
         List<GameObject> Storage = new List<GameObject>();
     }
 
-    void OnMouseOver()
+    void Highlight()
     {
         onObj = true;
         render.material.color = OnMouseColor;
     }
 
-    void OnMouseExit()
+    void DeHighlight()
     {
         onObj = false;
         render.material.color = BasicColor;

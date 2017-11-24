@@ -21,13 +21,13 @@ public class GrabAndDrop : MonoBehaviour
         BasicColor = render.material.color;
     }
 
-    void OnMouseOver()
+    void Highlight()
     {
         onObj = true;
         render.material.color = OnMouseColor;
     }
 
-    void OnMouseExit()
+    void DeHighlight()
     {
         onObj = false;
         render.material.color = BasicColor;

@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if ((Input.GetKeyDown(KeyCode.F) || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)) && potentialHeldObj != null)
+            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)*/) && potentialHeldObj != null)
             {
                 heldObj = potentialHeldObj;
                 //heldObj = potTest.GetComponent<Rigidbody>();
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
                 //Carried_Weight = 0;
             }
 
-            if ((Input.GetKeyDown(KeyCode.F) || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)) && storage != null)
+            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)*/) && storage != null)
             {
                 storage.SendMessage("GiveItem", this.name);
                 //Carried_Weight = 0;
@@ -317,7 +317,7 @@ public class PlayerController : MonoBehaviour
         {
             GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
             if (item != null)
-                item.SendMessage("OnMouseOver");
+                item.SendMessage("Highlight");
             ///
             //displayTipMessage("Pick me up!");
             //Debug.Log("You can pick it up!");
@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour
         {
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
             if (store != null)
-                store.SendMessage("OnMouseOver");
+                store.SendMessage("Highlight");
             ///
             storage = hit.gameObject;
             if (store.stored == null)
@@ -353,13 +353,13 @@ public class PlayerController : MonoBehaviour
         {
             GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
             if (item != null)
-                item.SendMessage("OnMouseExit");
+                item.SendMessage("DeHighlight");
         }
         if (hit.gameObject.tag == "Storage")
         {
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
             if (store != null)
-                store.SendMessage("OnMouseExit");
+                store.SendMessage("DeHighlight");
         }
     }
     ///
