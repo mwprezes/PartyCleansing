@@ -9,4 +9,5 @@ public interface IEnemyAI
     void ToWaitState();
     void ToLookForState();
     void ToSearchState();
+    void ToDistractState();
 }

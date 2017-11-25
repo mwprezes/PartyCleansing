@@ -52,7 +52,7 @@ public class DistractItem : MonoBehaviour {
             // and..
             // change enemystate to distracted;
             //enemy.currentState = enemy.distractedState;
-            enemy.currentState = enemy.searchState;
+            
         }
 	}
 }

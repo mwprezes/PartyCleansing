@@ -47,4 +47,10 @@ public class WaitState : IEnemyAI
     {
         enemy.currentState = enemy.waitState;
     }
+
+    public void ToDistractState()
+    {
+        enemy.currentState = enemy.distractState;
+    }
+
 }

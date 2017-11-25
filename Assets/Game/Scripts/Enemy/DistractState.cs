@@ -1,32 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class SearchState : IEnemyAI
+public class DistractState : IEnemyAI
 {
-
     EnemyStates enemy;
-    public GameObject storage;
 
-    public SearchState(EnemyStates enemy)
+    public DistractState(EnemyStates enemy)
     {
         this.enemy = enemy;
     }
 
     public void UpdateActions()
     {
-        enemy.navMeshAgent.isStopped = true;
-        Search();
-        ToWaitState();
-    }
-
-    public void Search()
-    {
-        if (storage != null)
-        {
-            Debug.Log("#Enemy: Zobaczmy co jest w srodku w tej szafunci");
-            storage.SendMessage("GiveItem", this.enemy.name);
-        }
+      
     }
 
     public void OnTriggerEnter(Collider enemy)
@@ -41,7 +29,7 @@ public class SearchState : IEnemyAI
 
     public void ToWaitState()
     {
-        enemy.currentState = enemy.waitState;
+        Debug.Log("#Enemy: Yhmmm...");
     }
 
     public void ToLookForState()
@@ -51,7 +39,7 @@ public class SearchState : IEnemyAI
 
     public void ToSearchState()
     {
-        Debug.Log("#Enemy: A co my tu mamy?");
+        enemy.currentState = enemy.waitState;
     }
 
     public void ToDistractState()

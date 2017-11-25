@@ -125,4 +125,10 @@ public class LookForState : IEnemyAI
         enemy.searchState.storage = store;
         enemy.currentState = enemy.searchState;
     }
+
+    public void ToDistractState()
+    {
+        enemy.currentState = enemy.distractState;
+    }
+
 }

@@ -23,6 +23,8 @@ public class EnemyStates : MonoBehaviour
     [HideInInspector]
     public WaitState waitState;
     [HideInInspector]
+    public DistractState distractState;
+    [HideInInspector]
     public IEnemyAI currentState;
     [HideInInspector]
     public NavMeshAgent navMeshAgent;
