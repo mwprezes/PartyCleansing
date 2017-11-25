@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody potentialHeldObj;
     GameObject potTest;
 
-    private GameObject distractObject;
+    GameObject distractObject;
 
     Rigidbody heldObj;
 
@@ -289,8 +289,7 @@ public class PlayerController : MonoBehaviour
         if (hit.gameObject.tag == "Distracting")
         {
 
-            distractObject = hit.gameObject;
-            DistractItem distractitem = distractObject.GetComponent<DistractItem>();
+           distractObject = distractObject.GetComponent<GameObject>();
 
             displayTipMessage("Activate to distract");
             Debug.Log("Activate to distract!");
