@@ -8,8 +8,10 @@ public class PlayerController : MonoBehaviour
     private float maxTime = 5;
 
     public float speed = 50;
+    public Vector3 movement;
     private Rigidbody rig;
     public bool isHolding = false;
+    public bool canRotate = true;
 
     Rigidbody potentialHeldObj;
     GameObject potTest;
@@ -58,24 +60,28 @@ public class PlayerController : MonoBehaviour
         float hAxis = Input.GetAxis("Horizontal");
         float vAxis = Input.GetAxis("Vertical");
 
-        Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
-        Vector3 rot = new Vector3(hAxis, 0, vAxis);
-        if (rot != new Vector3(0, 0, 0))
-            transform.rotation = Quaternion.LookRotation(rot);
+        //Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
+        movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
 
+        if (canRotate)
+        {
+            Vector3 rot = new Vector3(hAxis, 0, vAxis);
+            if (rot != new Vector3(0, 0, 0))
+                transform.rotation = Quaternion.LookRotation(rot);
+        }
         if (heldObj != null) Carried_Weight = heldObj.GetComponent<GrabAndDrop>().Weight;
 
         if (Carried_Weight <= 1) rig.MovePosition(transform.position + movement);
         else rig.MovePosition(transform.position + movement * (1 / Carried_Weight));
-
-        rig.MoveRotation(transform.rotation);
+        if (canRotate)
+            rig.MoveRotation(transform.rotation);
 
         //transform.Translate(movement/* * speed * Time.deltaTime*/, Space.World);
 
         // Pick up and drop
         if (isHolding)
         {
-            if (Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.F) /*|| Input.GetMouseButtonDown(0)*/)
             {
                 if (storage != null && !storageFull)
                 {
