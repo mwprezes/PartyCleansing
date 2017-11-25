@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody potentialHeldObj;
     GameObject potTest;
 
-    private GameObject distractObject;
+    GameObject distractObject;
 
     Rigidbody heldObj;
 
@@ -164,9 +164,9 @@ public class PlayerController : MonoBehaviour
             }
 
             //Activate distraction
-            if(Input.GetKeyDown(KeyCode.X) && distractObject!=null)
+            if(Input.GetKeyDown(KeyCode.C) && distractObject!=null)
             {
-                distractObject.SendMessage("isActive", true);
+                
                 HintText = "Włączonooo!";
                 StartCoroutine(Wait());
 
@@ -293,10 +293,7 @@ public class PlayerController : MonoBehaviour
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
         if (hit.gameObject.tag == "Distracting")
-        {
-
-            distractObject = hit.gameObject;
-            DistractItem distractitem = distractObject.GetComponent<DistractItem>();
+        {      
 
             displayTipMessage("Activate to distract");
             Debug.Log("Activate to distract!");
@@ -304,8 +301,8 @@ public class PlayerController : MonoBehaviour
             HintText = "Turn on to distract!";
             StartCoroutine(Wait());
 
-            
-            
+            distractObject = hit.GetComponent<GameObject>();
+
         }
         if (hit.gameObject.tag == "Storage")
         {

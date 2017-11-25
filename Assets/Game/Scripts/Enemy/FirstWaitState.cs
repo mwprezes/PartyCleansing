@@ -84,4 +84,11 @@ public class FirstWaitState : IEnemyAI
         Debug.Log("#Enemy: 1, 2, 3 - SZUKAM!");
         enemy.currentState = enemy.searchState;
     }
+
+    public void ToDistractState()
+    {
+        enemy.currentState = enemy.distractState;
+    }
+
+
 }
