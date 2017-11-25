@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerM : MonoBehaviour
 {
     private float waitTime = 0;
     private float maxTime = 5;
@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody potentialHeldObj;
     GameObject potTest;
-
-    private GameObject distractObject;
 
     Rigidbody heldObj;
 
@@ -156,18 +154,6 @@ public class PlayerController : MonoBehaviour
                 storage.SendMessage("GiveItem", this.name);
                 //Carried_Weight = 0;
             }
-
-            //Activate distraction
-            if(Input.GetKeyDown(KeyCode.X) && distractObject!=null)
-            {
-                distractObject.SendMessage("isActive", true);
-                HintText = "Włączonooo!";
-                StartCoroutine(Wait());
-
-            }
-               
-
-
         }
 
         //Wskazówka
@@ -286,21 +272,6 @@ public class PlayerController : MonoBehaviour
 
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
-        if (hit.gameObject.tag == "Distracting")
-        {
-
-            distractObject = hit.gameObject;
-            DistractItem distractitem = distractObject.GetComponent<DistractItem>();
-
-            displayTipMessage("Activate to distract");
-            Debug.Log("Activate to distract!");
-
-            HintText = "Turn on to distract!";
-            StartCoroutine(Wait());
-
-            
-            
-        }
         if (hit.gameObject.tag == "Storage")
         {
             storage = hit.gameObject;
@@ -352,14 +323,6 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("You can pick it up!");
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
-        if (hit.gameObject.tag == "Distracting")
-        {
-            DistractItem item = hit.gameObject.GetComponent<DistractItem>();
-            if (item != null)
-                item.SendMessage("Highlight");
-
-            distractObject = hit.GetComponent<GameObject>();
-        }
         if (hit.gameObject.tag == "Storage")
         {
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
@@ -386,8 +349,6 @@ public class PlayerController : MonoBehaviour
         potentialHeldObj = null;
         storage = null;
         combine = null;
-        distractObject = null;
-
         if (hit.gameObject.tag == "Pickable")
         {
             GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
@@ -399,12 +360,6 @@ public class PlayerController : MonoBehaviour
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
             if (store != null)
                 store.SendMessage("DeHighlight");
-        }
-        if (hit.gameObject.tag == "Distracting")
-        {
-            DistractItem item = hit.gameObject.GetComponent<DistractItem>();
-            if (item != null)
-                item.SendMessage("DeHighlight");
         }
     }
     ///
