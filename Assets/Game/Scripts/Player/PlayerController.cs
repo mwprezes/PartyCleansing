@@ -181,8 +181,7 @@ public class PlayerController : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.C) && isActivatingDS)
             {
                
-               DistractItem dsobj = distractObject.GetComponent<DistractItem>();
-                dsobj.isActive = true;
+               
                 HintText = "Włączonooo!";
                 StartCoroutine(Wait());
 
