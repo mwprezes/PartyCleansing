@@ -20,9 +20,10 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody heldObj;
 
-    private GameObject storage;
-    private bool storageFull;
-    private GameObject combine;
+    private GameObject storage= null;
+    private bool storageFull = false;
+    private GameObject combine = null;
+    private bool storageTrapped= false;
 
     Ray cameraRay;
     RaycastHit cameraRayHit;
@@ -44,6 +45,11 @@ public class PlayerController : MonoBehaviour
     public bool HintShow = false;
     private string HintText = "";
 
+    //Sounds
+    private AudioSource a_src;
+    public AudioClip a_pickup;
+    public AudioClip a_fullStorage;
+
     // Use this for initialization
     void Start()
     {
@@ -53,6 +59,7 @@ public class PlayerController : MonoBehaviour
         HintText = "Quick. I gotta clean this up! ";
         StartCoroutine(Wait());
 
+        a_src = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -85,7 +92,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.F) /*|| Input.GetMouseButtonDown(0)*/)
             {
-                if (storage != null && !storageFull)
+                if (storage != null && (!storageFull || !storageTrapped))
                 {
                     heldObj.isKinematic = false;
                     heldObj.transform.parent = null;
@@ -122,6 +129,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
+                        PlaySound(a_fullStorage, 1.0f);
                         Debug.Log("TOO HEAVY!");
                         HintText = "Nope, It's too heavy!";
                         StartCoroutine(Wait());
@@ -143,7 +151,10 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("Noting");
                 }
-
+                if(storageFull || storageTrapped)
+                {
+                    PlaySound(a_fullStorage, 1.0f);
+                }
             }
         }
         else
@@ -152,6 +163,7 @@ public class PlayerController : MonoBehaviour
             {
                 heldObj = potentialHeldObj;
                 //heldObj = potTest.GetComponent<Rigidbody>();
+                PlaySound(a_pickup, 1.0f);
                 pickUp(heldObj);
                 isHolding = true;
                 //Carried_Weight = 0;
@@ -308,7 +320,7 @@ public class PlayerController : MonoBehaviour
         {
             storage = hit.gameObject;
             StoringItems store = storage.GetComponent<StoringItems>();
-            if (store.stored == null)
+            if (!store.storagefull)
             {
                 storageFull = false;
                 Debug.Log("You can store stuff!");
@@ -331,6 +343,14 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(Wait());
                 }
                 //storage = null;
+            }
+            if (store.temperedWith)
+            {
+                storageTrapped = true;
+            }
+            else
+            {
+                storageTrapped = false;
             }
         }
         else if (hit.gameObject.tag == "Combine" && isHolding)
@@ -370,7 +390,7 @@ public class PlayerController : MonoBehaviour
                 store.SendMessage("Highlight");
             ///
             storage = hit.gameObject;
-            if (store.stored == null)
+            if (!store.storagefull)
             {
                 storageFull = false;
                 //Debug.Log("You can store stuff!");
@@ -380,6 +400,14 @@ public class PlayerController : MonoBehaviour
                 storageFull = true;
                 //Debug.Log("This one is full!");
                 //storage = null;
+            }
+            if (store.temperedWith)
+            {
+                storageTrapped = true;
+            }
+            else
+            {
+                storageTrapped = false;
             }
         }
     }
@@ -454,6 +482,11 @@ public class PlayerController : MonoBehaviour
         isHolding = false;
         Carried_Weight = 0;
 
+    }
+
+    public void PlaySound(AudioClip aud, float vol)
+    {
+        a_src.PlayOneShot(aud, vol);
     }
 
     IEnumerator Stun(float time)

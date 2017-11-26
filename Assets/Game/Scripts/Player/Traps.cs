@@ -13,6 +13,8 @@ public class Traps : MonoBehaviour {
     private bool isShowing = false;
     public string trapType;
 
+    public AudioClip a_setATrap;
+
 	// Use this for initialization
 	void Start () {
         player = GetComponent<PlayerController>();
@@ -40,6 +42,7 @@ public class Traps : MonoBehaviour {
             if (!store.temperedWith && !store.storagefull && trapType == "Cake")
             {
                 //Trap
+                player.PlaySound(a_setATrap, 1.0f);
                 thing.AddComponent<CakeTrap>();
                 store.trapName = "CakeTrap";
                 store.temperedWith = true;
@@ -57,6 +60,7 @@ public class Traps : MonoBehaviour {
             else if (!store.temperedWith && trapType == "BasicLock")
             {
                 //Lock
+                player.PlaySound(a_setATrap, 1.0f);
                 thing.AddComponent<BasicLock>();
                 store.trapName = "BasicLock";
                 store.temperedWith = true;

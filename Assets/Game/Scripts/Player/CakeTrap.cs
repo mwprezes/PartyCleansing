@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CakeTrap : MonoBehaviour {
 
-    public float time = 5;
+    public float time = 3;
 
     public void Activate(GameObject who)
     {

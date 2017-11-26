@@ -88,6 +88,8 @@ public class LookForState : IEnemyAI
             PlayerController play = hit.gameObject.GetComponent<PlayerController>();
             if (play.isHolding)
             {
+                AudioSource ausrc = enemy.GetComponent<AudioSource>();
+                ausrc.PlayOneShot(enemy.detected, 0.5f);
                 Debug.Log("#Enemy: HEY! Co z tym robisz?");
                 play.SendMessage("Bust");
             }

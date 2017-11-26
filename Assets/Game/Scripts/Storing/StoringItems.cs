@@ -21,6 +21,7 @@ public class StoringItems : MonoBehaviour
     private Renderer render;
     private Color BasicColor;
     private Color OnMouseColor = Color.green;
+    private Color Full = Color.red;
 
     // Use this for initialization
     void Start () {
@@ -35,7 +36,8 @@ public class StoringItems : MonoBehaviour
     void Highlight()
     {
         onObj = true;
-        render.material.color = OnMouseColor;
+        if (!storagefull || !temperedWith)
+            render.material.color = OnMouseColor;
     }
 
     void DeHighlight()
@@ -46,8 +48,9 @@ public class StoringItems : MonoBehaviour
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        if (storagefull || temperedWith)
+            render.material.color = Full;
+    }
 
     public void Temper(string type)
     {

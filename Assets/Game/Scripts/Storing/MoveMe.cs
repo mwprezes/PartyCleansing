@@ -13,7 +13,7 @@ public class MoveMe : MonoBehaviour {
     void Start ()
     {
         rig = this.gameObject.GetComponent<Rigidbody>();
-        rig.isKinematic = true;
+        //rig.isKinematic = true;
         //child = this.GetComponentsInChildren<GameObject>();
     }
 	

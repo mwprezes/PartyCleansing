@@ -9,6 +9,8 @@ public class EnemyStates : MonoBehaviour
     public Transform[] waypoints;
     public int whereStorageRange;
     public int maxTime;
+    public AudioClip detected;
+    public AudioClip a_stn;
 
     [HideInInspector]
     public int wayAllNumber;
@@ -115,5 +117,17 @@ public class EnemyStates : MonoBehaviour
             HintText = "Empty...";
             StartCoroutine(Wait());
         }
+    }
+
+    IEnumerator Stun(float time)
+    {
+        AudioSource ausrc = GetComponent<AudioSource>();
+        ausrc.PlayOneShot(a_stn, 0.5f);
+
+        this.enabled = false;
+
+        yield return new WaitForSeconds(time);
+
+        this.enabled = true;
     }
 }

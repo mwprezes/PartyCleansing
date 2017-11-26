@@ -58,7 +58,7 @@ public class MoveObjects : MonoBehaviour {
                 parent.transform.parent = null;
                 toBeMoved.transform.parent = null;
 
-                parent.GetComponent<Rigidbody>().isKinematic = true;
+                //parent.GetComponent<Rigidbody>().isKinematic = true;
                 parent.transform.parent = toBeMoved.transform;
                 //parent.transform.localPosition = (toBeMoved.transform.position - parent.transform.position).normalized;
 
