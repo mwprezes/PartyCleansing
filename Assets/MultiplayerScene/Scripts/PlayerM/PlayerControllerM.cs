@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerControllerM : MonoBehaviour
+public class PlayerControllerM : NetworkBehaviour
 {
+
     private float waitTime = 0;
     private float maxTime = 5;
 
@@ -40,6 +43,33 @@ public class PlayerControllerM : MonoBehaviour
     public bool HintShow = false;
     private string HintText = "";
 
+    //Network Multiplayer
+    struct PlayerState
+    {
+        public float x;
+        public float y;
+        public float z;
+    }
+
+    [SyncVar] PlayerState state;
+
+    void Awake()
+    {
+        InitState();
+    }
+
+    [Server]
+    void InitState()
+    {
+        state = new PlayerState
+        {
+            x = -10,
+            y = 10,
+            z = -30
+        };
+    }
+
+
     // Use this for initialization
     void Start()
     {
@@ -54,9 +84,142 @@ public class PlayerControllerM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Movement
-        float hAxis = Input.GetAxis("Horizontal");
-        float vAxis = Input.GetAxis("Vertical");
+        if (isLocalPlayer)
+        {
+            //Movement
+            float hAxis = Input.GetAxis("Horizontal");
+            float vAxis = Input.GetAxis("Vertical");
+
+            CmdMoveOnServer(hAxis, vAxis);
+
+            SyncState();
+
+            //transform.Translate(movement/* * speed * Time.deltaTime*/, Space.World);
+
+            // Pick up and drop
+            if (isHolding)
+            {
+                if (Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
+                {
+                    if (storage != null && !storageFull)
+                    {
+                        heldObj.isKinematic = false;
+                        heldObj.transform.parent = null;
+                        isHolding = false;
+                        Debug.Log("Stored!");
+
+                        HintText = "Uff, it's hiden!";
+                        StartCoroutine(Wait());
+
+                        storage.SendMessage("Store", heldObj.gameObject);
+                        heldObj = null;
+                        //potentialHeldObj = null;
+                        Carried_Weight = 0;
+                    }
+                    else if (combine != null)
+                    {
+
+                        if (heldObj.GetComponent<GrabAndDrop>().Weight <= combine.GetComponent<Combination>().AllowedWeight)
+                        {
+                            heldObj.isKinematic = false;
+                            heldObj.transform.parent = null;
+                            isHolding = false;
+                            //WaitASecond("Combined");
+
+                            Debug.Log("Combined!");
+
+                            HintText = "Yey, combined!";
+                            StartCoroutine(Wait());
+
+                            combine.SendMessage("ItemForCombination", heldObj.gameObject);
+                            heldObj = null;
+                            //potentialHeldObj = null;
+                            Carried_Weight = 0;
+                        }
+                        else
+                        {
+                            Debug.Log("TOO HEAVY!");
+                            HintText = "Nope, It's too heavy!";
+                            StartCoroutine(Wait());
+                        }
+                    }
+                    else if (storage == null && combine == null)
+                    {
+                        Debug.Log("LetGo");
+                        //GameObject held = this.transform.Find("Pickable").gameObject;
+                        //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
+                        heldObj.isKinematic = false;
+                        heldObj.transform.parent = null;
+                        heldObj = null;
+                        isHolding = false;
+                        //potentialHeldObj = null;
+                        Carried_Weight = 0;
+                    }
+                    else
+                    {
+                        Debug.Log("Noting");
+                    }
+
+                }
+            }
+            else
+            {
+                if ((Input.GetKeyDown(KeyCode.F) || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)) && potentialHeldObj != null)
+                {
+                    heldObj = potentialHeldObj;
+                    //heldObj = potTest.GetComponent<Rigidbody>();
+                    pickUp(heldObj);
+                    isHolding = true;
+                    //Carried_Weight = 0;
+                }
+
+                if ((Input.GetKeyDown(KeyCode.F) || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)) && storage != null)
+                {
+                    storage.SendMessage("GiveItem", this.name);
+                    //Carried_Weight = 0;
+                }
+            }
+
+            //Wskazówka
+            if (showTip)
+            {
+                if (timer < tipTime)
+                {
+                    timer += Time.deltaTime;
+                }
+                else
+                {
+                    tipGUI.enabled = false;
+                    showTip = false;
+                    timer = 0;
+                }
+            }
+        }
+
+
+    }
+
+    //multi part 2
+
+    void SyncState()
+    {
+        transform.position = new Vector3(state.x, state.y, state.z);
+    }
+
+
+
+    [Command]
+    void CmdMoveOnServer(float hAxis, float vAxis)
+    {
+        state = Move(state, hAxis, vAxis);
+    }
+
+
+    PlayerState Move(PlayerState previous, float hAxis, float vAxis)
+    {
+        float dx = hAxis;
+        float dy = 0;
+        float dz = vAxis;
 
         Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
         Vector3 rot = new Vector3(hAxis, 0, vAxis);
@@ -70,107 +233,15 @@ public class PlayerControllerM : MonoBehaviour
 
         rig.MoveRotation(transform.rotation);
 
-        //transform.Translate(movement/* * speed * Time.deltaTime*/, Space.World);
-
-        // Pick up and drop
-        if (isHolding)
+        return new PlayerState
         {
-            if (Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
-            {
-                if (storage != null && !storageFull)
-                {
-                    heldObj.isKinematic = false;
-                    heldObj.transform.parent = null;
-                    isHolding = false;
-                    Debug.Log("Stored!");
-
-                    HintText = "Uff, it's hiden!";
-                    StartCoroutine(Wait());
-
-                    storage.SendMessage("Store", heldObj.gameObject);
-                    heldObj = null;
-                    //potentialHeldObj = null;
-                    Carried_Weight = 0;
-                }
-                else if (combine != null)
-                {
-
-                    if (heldObj.GetComponent<GrabAndDrop>().Weight <= combine.GetComponent<Combination>().AllowedWeight)
-                    {
-                        heldObj.isKinematic = false;
-                        heldObj.transform.parent = null;
-                        isHolding = false;
-                        //WaitASecond("Combined");
-                        
-                        Debug.Log("Combined!");
-
-                        HintText = "Yey, combined!";
-                        StartCoroutine(Wait());
-
-                        combine.SendMessage("ItemForCombination", heldObj.gameObject);
-                        heldObj = null;
-                        //potentialHeldObj = null;
-                        Carried_Weight = 0;
-                    }
-                    else
-                    {
-                        Debug.Log("TOO HEAVY!");
-                        HintText = "Nope, It's too heavy!";
-                        StartCoroutine(Wait());
-                    }
-                }
-                else if (storage == null && combine == null)
-                {
-                    Debug.Log("LetGo");
-                    //GameObject held = this.transform.Find("Pickable").gameObject;
-                    //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
-                    heldObj.isKinematic = false;
-                    heldObj.transform.parent = null;
-                    heldObj = null;
-                    isHolding = false;
-                    //potentialHeldObj = null;
-                    Carried_Weight = 0;
-                }
-                else
-                {
-                    Debug.Log("Noting");
-                }
-
-            }
-        }
-        else
-        {
-            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)*/) && potentialHeldObj != null)
-            {
-                heldObj = potentialHeldObj;
-                //heldObj = potTest.GetComponent<Rigidbody>();
-                pickUp(heldObj);
-                isHolding = true;
-                //Carried_Weight = 0;
-            }
-
-            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)*/) && storage != null)
-            {
-                storage.SendMessage("GiveItem", this.name);
-                //Carried_Weight = 0;
-            }
-        }
-
-        //Wskazówka
-        if (showTip)
-        {
-            if (timer < tipTime)
-            {
-                timer += Time.deltaTime;
-            }
-            else
-            {
-                tipGUI.enabled = false;
-                showTip = false;
-                timer = 0;
-            }
-        }
+            x = dx + previous.x,
+            y = dy + previous.y,
+            z = dz + previous.z
+        };
     }
+
+
 
     //Wskazówka
     void displayTipMessage(string tipText)
@@ -186,7 +257,7 @@ public class PlayerControllerM : MonoBehaviour
         tempspeed = speed;
 
         Debug.Log(textMessage);
-        while (waitTime<maxTime)
+        while (waitTime < maxTime)
         {
             speed = 0;
             //Debug.Log(textMessage);
@@ -317,7 +388,7 @@ public class PlayerControllerM : MonoBehaviour
         {
             GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
             if (item != null)
-                item.SendMessage("Highlight");
+                item.SendMessage("OnMouseOver");
             ///
             //displayTipMessage("Pick me up!");
             //Debug.Log("You can pick it up!");
@@ -327,7 +398,7 @@ public class PlayerControllerM : MonoBehaviour
         {
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
             if (store != null)
-                store.SendMessage("Highlight");
+                store.SendMessage("OnMouseOver");
             ///
             storage = hit.gameObject;
             if (store.stored == null)
@@ -353,13 +424,13 @@ public class PlayerControllerM : MonoBehaviour
         {
             GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
             if (item != null)
-                item.SendMessage("DeHighlight");
+                item.SendMessage("OnMouseExit");
         }
         if (hit.gameObject.tag == "Storage")
         {
             StoringItems store = hit.gameObject.GetComponent<StoringItems>();
             if (store != null)
-                store.SendMessage("DeHighlight");
+                store.SendMessage("OnMouseExit");
         }
     }
     ///
