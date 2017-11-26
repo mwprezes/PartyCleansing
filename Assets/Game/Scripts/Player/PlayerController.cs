@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     GameObject potTest;
 
     GameObject distractObject;
+    private bool isActivatingDS = false;
+    
 
     Rigidbody heldObj;
 
@@ -176,9 +178,11 @@ public class PlayerController : MonoBehaviour
             }
 
             //Activate distraction
-            if(Input.GetKeyDown(KeyCode.C) && distractObject!=null)
+            if(Input.GetKeyDown(KeyCode.C) && isActivatingDS)
             {
-                
+               
+               DistractItem dsobj = distractObject.GetComponent<DistractItem>();
+                dsobj.isActive = true;
                 HintText = "Włączonooo!";
                 StartCoroutine(Wait());
 
@@ -314,7 +318,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Wait());
 
             distractObject = hit.GetComponent<GameObject>();
-
+ 
         }
         if (hit.gameObject.tag == "Storage")
         {
@@ -382,6 +386,7 @@ public class PlayerController : MonoBehaviour
                 item.SendMessage("Highlight");
 
             distractObject = hit.GetComponent<GameObject>();
+            isActivatingDS = true;
         }
         if (hit.gameObject.tag == "Storage")
         {

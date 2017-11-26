@@ -42,6 +42,7 @@ public class EnemyStates : MonoBehaviour
         searchState = new SearchState(this);
         waitState = new WaitState(this);
         navMeshAgent = GetComponent<NavMeshAgent>();
+        distractState = new DistractState(this);
     }
 
 

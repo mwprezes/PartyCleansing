@@ -14,7 +14,7 @@ public class DistractItem : MonoBehaviour {
 
     static public bool onObj = false;
 
-    public bool isActive;
+    public bool isActive = false;
 
     EnemyStates enemy;
 
@@ -24,7 +24,7 @@ public class DistractItem : MonoBehaviour {
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
 
-        isActive = false;
+      
 	}
 
 
@@ -50,7 +50,7 @@ public class DistractItem : MonoBehaviour {
             //well... play sth
             // and..
             // change enemystate to distracted;
-            //enemy.currentState = enemy.distractedState;
+            
             
         }
 	}
