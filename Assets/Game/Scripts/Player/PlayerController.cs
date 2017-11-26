@@ -304,7 +304,7 @@ public class PlayerController : MonoBehaviour
 
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
-        if (hit.gameObject.tag == "Distracting")
+        if (hit.gameObject.tag == "Distract")
         {      
 
             displayTipMessage("Activate to distract");
@@ -375,7 +375,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("You can pick it up!");
             potentialHeldObj = hit.GetComponent<Rigidbody>();
         }
-        if (hit.gameObject.tag == "Distracting")
+        if (hit.gameObject.tag == "Distract")
         {
             DistractItem item = hit.gameObject.GetComponent<DistractItem>();
             if (item != null)
@@ -431,7 +431,7 @@ public class PlayerController : MonoBehaviour
             if (store != null)
                 store.SendMessage("DeHighlight");
         }
-        if (hit.gameObject.tag == "Distracting")
+        if (hit.gameObject.tag == "Distract")
         {
             DistractItem item = hit.gameObject.GetComponent<DistractItem>();
             if (item != null)

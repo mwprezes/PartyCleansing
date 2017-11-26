@@ -10,7 +10,7 @@ public class DistractItem : MonoBehaviour {
     private Color OnMouseColor = Color.red;
 
     public Color Active1 = Color.blue;
-    public Color Active2 = Color.yellow;
+    
 
     static public bool onObj = false;
 
@@ -47,7 +47,6 @@ public class DistractItem : MonoBehaviour {
         {
 
             render.material.color = Active1;
-            render.material.color = Active2;
             //well... play sth
             // and..
             // change enemystate to distracted;
