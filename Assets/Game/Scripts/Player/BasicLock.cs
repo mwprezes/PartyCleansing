@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicLock : MonoBehaviour {
-    
-    public void Activate(GameObject who)
+    Lockpicking lockpick;
+
+    public void Activate(GameObject who, StoringItems store)
     {
-        //Lockpicking?...
+        lockpick.SendMessage("bound", store);
+        lockpick.SendMessage("lockpick_result", 4);
     }
 
 }

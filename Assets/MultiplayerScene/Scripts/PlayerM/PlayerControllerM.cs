@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerControllerM : MonoBehaviour
+public class PlayerControllerM : NetworkBehaviour
 {
     private float waitTime = 0;
     private float maxTime = 5;
@@ -54,149 +55,159 @@ public class PlayerControllerM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Movement
-        float hAxis = Input.GetAxis("Horizontal");
-        float vAxis = Input.GetAxis("Vertical");
-
-        Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
-        Vector3 rot = new Vector3(hAxis, 0, vAxis);
-        if (rot != new Vector3(0, 0, 0))
-            transform.rotation = Quaternion.LookRotation(rot);
-
-        if (heldObj != null) Carried_Weight = heldObj.GetComponent<GrabAndDrop>().Weight;
-
-        if (Carried_Weight <= 1) rig.MovePosition(transform.position + movement);
-        else rig.MovePosition(transform.position + movement * (1 / Carried_Weight));
-
-        rig.MoveRotation(transform.rotation);
-
-        //transform.Translate(movement/* * speed * Time.deltaTime*/, Space.World);
-
-        // Pick up and drop
-        if (isHolding)
+        if (isLocalPlayer)
         {
-            if (Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
+            //Movement
+            float hAxis = Input.GetAxis("Horizontal");
+            float vAxis = Input.GetAxis("Vertical");
+
+            Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
+            Vector3 rot = new Vector3(hAxis, 0, vAxis);
+            if (rot != new Vector3(0, 0, 0))
+                transform.rotation = Quaternion.LookRotation(rot);
+
+            if (heldObj != null) Carried_Weight = heldObj.GetComponent<GrabAndDrop>().Weight;
+
+            if (Carried_Weight <= 1) rig.MovePosition(transform.position + movement);
+            else rig.MovePosition(transform.position + movement * (1 / Carried_Weight));
+
+            rig.MoveRotation(transform.rotation);
+
+            //transform.Translate(movement/* * speed * Time.deltaTime*/, Space.World);
+
+            // Pick up and drop
+            if (isHolding)
             {
-                if (storage != null && !storageFull)
+                if (Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
                 {
-                    heldObj.isKinematic = false;
-                    heldObj.transform.parent = null;
-                    isHolding = false;
-                    Debug.Log("Stored!");
-
-                    HintText = "Uff, it's hiden!";
-                    StartCoroutine(Wait());
-
-                    storage.SendMessage("Store", heldObj.gameObject);
-                    heldObj = null;
-                    //potentialHeldObj = null;
-                    Carried_Weight = 0;
-                }
-                else if (combine != null)
-                {
-
-                    if (heldObj.GetComponent<GrabAndDrop>().Weight <= combine.GetComponent<Combination>().AllowedWeight)
+                    if (storage != null && !storageFull)
                     {
                         heldObj.isKinematic = false;
                         heldObj.transform.parent = null;
                         isHolding = false;
-                        //WaitASecond("Combined");
-                        
-                        Debug.Log("Combined!");
+                        Debug.Log("Stored!");
 
-                        HintText = "Yey, combined!";
+                        HintText = "Uff, it's hiden!";
                         StartCoroutine(Wait());
 
-                        combine.SendMessage("ItemForCombination", heldObj.gameObject);
+                        storage.SendMessage("Store", heldObj.gameObject);
                         heldObj = null;
+                        //potentialHeldObj = null;
+                        Carried_Weight = 0;
+                    }
+                    else if (combine != null)
+                    {
+
+                        if (heldObj.GetComponent<GrabAndDrop>().Weight <= combine.GetComponent<Combination>().AllowedWeight)
+                        {
+                            heldObj.isKinematic = false;
+                            heldObj.transform.parent = null;
+                            isHolding = false;
+                            //WaitASecond("Combined");
+
+                            Debug.Log("Combined!");
+
+                            HintText = "Yey, combined!";
+                            StartCoroutine(Wait());
+
+                            combine.SendMessage("ItemForCombination", heldObj.gameObject);
+                            heldObj = null;
+                            //potentialHeldObj = null;
+                            Carried_Weight = 0;
+                        }
+                        else
+                        {
+                            Debug.Log("TOO HEAVY!");
+                            HintText = "Nope, It's too heavy!";
+                            StartCoroutine(Wait());
+                        }
+                    }
+                    else if (storage == null && combine == null)
+                    {
+                        Debug.Log("LetGo");
+                        //GameObject held = this.transform.Find("Pickable").gameObject;
+                        //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
+                        heldObj.isKinematic = false;
+                        heldObj.transform.parent = null;
+                        heldObj = null;
+                        isHolding = false;
                         //potentialHeldObj = null;
                         Carried_Weight = 0;
                     }
                     else
                     {
-                        Debug.Log("TOO HEAVY!");
-                        HintText = "Nope, It's too heavy!";
-                        StartCoroutine(Wait());
+                        Debug.Log("Noting");
                     }
-                }
-                else if (storage == null && combine == null)
-                {
-                    Debug.Log("LetGo");
-                    //GameObject held = this.transform.Find("Pickable").gameObject;
-                    //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
-                    heldObj.isKinematic = false;
-                    heldObj.transform.parent = null;
-                    heldObj = null;
-                    isHolding = false;
-                    //potentialHeldObj = null;
-                    Carried_Weight = 0;
-                }
-                else
-                {
-                    Debug.Log("Noting");
-                }
 
-            }
-        }
-        else
-        {
-            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)*/) && potentialHeldObj != null)
-            {
-                heldObj = potentialHeldObj;
-                //heldObj = potTest.GetComponent<Rigidbody>();
-                pickUp(heldObj);
-                isHolding = true;
-                //Carried_Weight = 0;
-            }
-
-            if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)*/) && storage != null)
-            {
-                storage.SendMessage("GiveItem", this.name);
-                //Carried_Weight = 0;
-            }
-        }
-
-        //Wskazówka
-        if (showTip)
-        {
-            if (timer < tipTime)
-            {
-                timer += Time.deltaTime;
+                }
             }
             else
             {
-                tipGUI.enabled = false;
-                showTip = false;
-                timer = 0;
+                if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && GrabAndDrop.onObj == true)*/) && potentialHeldObj != null)
+                {
+                    heldObj = potentialHeldObj;
+                    //heldObj = potTest.GetComponent<Rigidbody>();
+                    pickUp(heldObj);
+                    isHolding = true;
+                    //Carried_Weight = 0;
+                }
+
+                if ((Input.GetKeyDown(KeyCode.F)/* || (Input.GetMouseButtonDown(0) && StoringItems.onObj == true)*/) && storage != null)
+                {
+                    storage.SendMessage("GiveItem", this.name);
+                    //Carried_Weight = 0;
+                }
+            }
+
+            //Wskazówka
+            if (showTip)
+            {
+                if (timer < tipTime)
+                {
+                    timer += Time.deltaTime;
+                }
+                else
+                {
+                    tipGUI.enabled = false;
+                    showTip = false;
+                    timer = 0;
+                }
             }
         }
+       
     }
 
     //Wskazówka
     void displayTipMessage(string tipText)
     {
-        tipGUI.text = tipText;
-        tipGUI.enabled = true;
-        this.showTip = true;
+        if (isLocalPlayer)
+        {
+            tipGUI.text = tipText;
+            tipGUI.enabled = true;
+            this.showTip = true;
+        }
     }
 
     void WaitASecond(string textMessage)
     {
-        float tempspeed;
-        tempspeed = speed;
-
-        Debug.Log(textMessage);
-        while (waitTime<maxTime)
+        if (isLocalPlayer)
         {
-            speed = 0;
-            //Debug.Log(textMessage);
-            waitTime += Time.deltaTime;
-        }
+            float tempspeed;
+            tempspeed = speed;
 
-        speed = tempspeed;
-        if (waitTime > maxTime)
-        {
-            waitTime = 0;
+            Debug.Log(textMessage);
+            while (waitTime < maxTime)
+            {
+                speed = 0;
+                //Debug.Log(textMessage);
+                waitTime += Time.deltaTime;
+            }
+
+            speed = tempspeed;
+            if (waitTime > maxTime)
+            {
+                waitTime = 0;
+            }
         }
     }
 
@@ -209,16 +220,18 @@ public class PlayerControllerM : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.color = Color.magenta;
-        GUI.Label(new Rect(10, 10, 100, 100), "Score: " + Score);
-
-        if (HintShow)
+        if (isLocalPlayer)
         {
-            GUI.color = Color.white;
-            var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-            GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
-        }
+            GUI.color = Color.magenta;
+            GUI.Label(new Rect(10, 10, 100, 100), "Score: " + Score);
 
+            if (HintShow)
+            {
+                GUI.color = Color.white;
+                var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+                GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
+            }
+        }
     }
 
     // Pick up / Store
@@ -262,104 +275,114 @@ public class PlayerControllerM : MonoBehaviour
     ///
     private void OnTriggerEnter(Collider hit)
     {
-        if (hit.gameObject.tag == "Pickable")
+        if (isLocalPlayer)
         {
-            displayTipMessage("Pick me up!");
-            Debug.Log("You can pick it up!");
-
-            HintText = "'F' to pick up!";
-            StartCoroutine(Wait());
-
-            potentialHeldObj = hit.GetComponent<Rigidbody>();
-        }
-        if (hit.gameObject.tag == "Storage")
-        {
-            storage = hit.gameObject;
-            StoringItems store = storage.GetComponent<StoringItems>();
-            if (store.stored == null)
+            if (hit.gameObject.tag == "Pickable")
             {
-                storageFull = false;
-                Debug.Log("You can store stuff!");
+                displayTipMessage("Pick me up!");
+                Debug.Log("You can pick it up!");
 
-                if (isHolding)
-                {
-                    HintText = "'F' to hide";
-                    StartCoroutine(Wait());
-                }
+                HintText = "'F' to pick up!";
+                StartCoroutine(Wait());
 
+                potentialHeldObj = hit.GetComponent<Rigidbody>();
             }
-            else
+            if (hit.gameObject.tag == "Storage")
             {
-                storageFull = true;
-                Debug.Log("This one is full!");
-
-                if (isHolding)
+                storage = hit.gameObject;
+                StoringItems store = storage.GetComponent<StoringItems>();
+                if (store.stored == null)
                 {
-                    HintText = "Nope, It's full";
-                    StartCoroutine(Wait());
+                    storageFull = false;
+                    Debug.Log("You can store stuff!");
+
+                    if (isHolding)
+                    {
+                        HintText = "'F' to hide";
+                        StartCoroutine(Wait());
+                    }
+
                 }
-                //storage = null;
+                else
+                {
+                    storageFull = true;
+                    Debug.Log("This one is full!");
+
+                    if (isHolding)
+                    {
+                        HintText = "Nope, It's full";
+                        StartCoroutine(Wait());
+                    }
+                    //storage = null;
+                }
+            }
+            else if (hit.gameObject.tag == "Combine" && isHolding)
+            {
+                combine = hit.gameObject;
+                Debug.Log("Combination time!");
+
+                HintText = " 'F' to combine!";
+                StartCoroutine(Wait());
             }
         }
-        else if (hit.gameObject.tag == "Combine" && isHolding)
-        {
-            combine = hit.gameObject;
-            Debug.Log("Combination time!");
-
-            HintText = " 'F' to combine!";
-            StartCoroutine(Wait());
-        }
+            
     }
 
     private void OnTriggerStay(Collider hit)
     {
-        if (hit.gameObject.tag == "Pickable")
+        if (isLocalPlayer)
         {
-            GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
-            if (item != null)
-                item.SendMessage("Highlight");
-            ///
-            //displayTipMessage("Pick me up!");
-            //Debug.Log("You can pick it up!");
-            potentialHeldObj = hit.GetComponent<Rigidbody>();
-        }
-        if (hit.gameObject.tag == "Storage")
-        {
-            StoringItems store = hit.gameObject.GetComponent<StoringItems>();
-            if (store != null)
-                store.SendMessage("Highlight");
-            ///
-            storage = hit.gameObject;
-            if (store.stored == null)
+            if (hit.gameObject.tag == "Pickable")
             {
-                storageFull = false;
-                //Debug.Log("You can store stuff!");
+                GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
+                if (item != null)
+                    item.SendMessage("Highlight");
+                ///
+                //displayTipMessage("Pick me up!");
+                //Debug.Log("You can pick it up!");
+                potentialHeldObj = hit.GetComponent<Rigidbody>();
             }
-            else
+            if (hit.gameObject.tag == "Storage")
             {
-                storageFull = true;
-                //Debug.Log("This one is full!");
-                //storage = null;
+                StoringItems store = hit.gameObject.GetComponent<StoringItems>();
+                if (store != null)
+                    store.SendMessage("Highlight");
+                ///
+                storage = hit.gameObject;
+                if (store.stored == null)
+                {
+                    storageFull = false;
+                    //Debug.Log("You can store stuff!");
+                }
+                else
+                {
+                    storageFull = true;
+                    //Debug.Log("This one is full!");
+                    //storage = null;
+                }
             }
         }
     }
 
     private void OnTriggerExit(Collider hit)
     {
-        potentialHeldObj = null;
-        storage = null;
-        combine = null;
-        if (hit.gameObject.tag == "Pickable")
+        if (isLocalPlayer)
         {
-            GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
-            if (item != null)
-                item.SendMessage("DeHighlight");
-        }
-        if (hit.gameObject.tag == "Storage")
-        {
-            StoringItems store = hit.gameObject.GetComponent<StoringItems>();
-            if (store != null)
-                store.SendMessage("DeHighlight");
+            potentialHeldObj = null;
+            storage = null;
+            combine = null;
+            if (hit.gameObject.tag == "Pickable")
+            {
+                GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
+                if (item != null)
+                    item.SendMessage("DeHighlight");
+            }
+            if (hit.gameObject.tag == "Storage")
+            {
+                StoringItems store = hit.gameObject.GetComponent<StoringItems>();
+                if (store != null)
+                    store.SendMessage("DeHighlight");
+            }
         }
     }
     ///
@@ -371,49 +394,61 @@ public class PlayerControllerM : MonoBehaviour
     //}
     private void pickUp(Rigidbody body)
     {
-        Debug.Log("Grabbed!");
-        body.gameObject.transform.parent = this.transform;
-        body.gameObject.transform.localPosition = new Vector3(0, 0, 2);
-        body.isKinematic = true;
-        Carried_Weight = body.GetComponent<GrabAndDrop>().Weight;
-        Debug.Log("Weight = " + Carried_Weight);
+        if (isLocalPlayer)
+        {
+            Debug.Log("Grabbed!");
+            body.gameObject.transform.parent = this.transform;
+            body.gameObject.transform.localPosition = new Vector3(0, 0, 2);
+            body.isKinematic = true;
+            Carried_Weight = body.GetComponent<GrabAndDrop>().Weight;
+            Debug.Log("Weight = " + Carried_Weight);
+        }
     }
 
     void ReciveItem(GameObject rec)
     {
-        if (rec != null)
+        if (isLocalPlayer)
         {
-            heldObj = rec.GetComponent<Rigidbody>();
-            pickUp(heldObj);
-            isHolding = true;
+            if (rec != null)
+            {
+                heldObj = rec.GetComponent<Rigidbody>();
+                pickUp(heldObj);
+                isHolding = true;
+            }
         }
     }
 
     void Bust()
     {
-        Debug.Log("I am Busted!");
+        if (isLocalPlayer)
+        {
+            Debug.Log("I am Busted!");
 
-        HintText = "OH ON! I'm busted! :C";
-        StartCoroutine(Wait());
+            HintText = "OH ON! I'm busted! :C";
+            StartCoroutine(Wait());
 
-        Score = Score - heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
-        //GameObject held = this.transform.Find("Pickable").gameObject;
-        //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
-        heldObj.isKinematic = false;
-        heldObj.transform.parent = null;
-        heldObj.tag = "Busted";
-        heldObj = null;
-        isHolding = false;
-        Carried_Weight = 0;
+            Score = Score - heldObj.GetComponent<GrabAndDrop>().Score_for_Item;
+            //GameObject held = this.transform.Find("Pickable").gameObject;
+            //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
+            heldObj.isKinematic = false;
+            heldObj.transform.parent = null;
+            heldObj.tag = "Busted";
+            heldObj = null;
+            isHolding = false;
+            Carried_Weight = 0;
+        }
 
     }
 
     IEnumerator Stun(float time)
     {
-        this.enabled = false;
+        if (isLocalPlayer)
+        {
+            this.enabled = false;
 
-        yield return new WaitForSeconds(time);
+            yield return new WaitForSeconds(time);
 
-        this.enabled = true;
+            this.enabled = true;
+        }
     }
 }
