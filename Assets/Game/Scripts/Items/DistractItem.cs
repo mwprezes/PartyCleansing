@@ -40,6 +40,16 @@ public class DistractItem : MonoBehaviour {
         render.material.color = BasicColor;
     }
 
+    void TurnOn()
+    {
+        isActive = true;
+    }
+
+    void TurnOff()
+    {
+        isActive = false;
+    }
+
     // Update is called once per frame
     void Update ()
     {

@@ -177,15 +177,7 @@ public class PlayerController : MonoBehaviour
                 //Carried_Weight = 0;
             }
 
-            //Activate distraction
-            if(Input.GetKeyDown(KeyCode.C) && isActivatingDS)
-            {
-               
-               
-                HintText = "Włączonooo!";
-                StartCoroutine(Wait());
-
-            }
+            
                
 
 
@@ -385,7 +377,35 @@ public class PlayerController : MonoBehaviour
                 item.SendMessage("Highlight");
 
             distractObject = hit.GetComponent<GameObject>();
-            isActivatingDS = true;
+
+            if (!isActivatingDS)
+            {
+                //Activate distraction
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    isActivatingDS = true;
+                    //DistractItem radio = hit.GetComponent<DistractItem>();
+                    item.SendMessage("TurnOn");
+
+                    HintText = "Włączonooo!";
+                    StartCoroutine(Wait());
+
+                }
+            }else
+            {
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    isActivatingDS = false;
+                    //DistractItem radio = hit.GetComponent<DistractItem>();
+                    item.SendMessage("TurnOff");
+
+                    HintText = "Włyłączono!";
+                    StartCoroutine(Wait());
+
+                }
+            }
+
+
         }
         if (hit.gameObject.tag == "Storage")
         {
