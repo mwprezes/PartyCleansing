@@ -10,7 +10,9 @@ public class DistractItem : MonoBehaviour {
     private Color OnMouseColor = Color.red;
 
     public Color Active1 = Color.blue;
-    
+
+    private AudioSource SourceMusic;
+    //public AudioClip radio;
 
     static public bool onObj = false;
 
@@ -23,9 +25,9 @@ public class DistractItem : MonoBehaviour {
     {
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
+        SourceMusic = GetComponent<AudioSource>();
 
-      
-	}
+    }
 
 
     void Highlight()
@@ -51,17 +53,18 @@ public class DistractItem : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
-		if(isActive)
+        if (isActive)
         {
 
             render.material.color = Active1;
             //well... play sth
             // and..
-            // change enemystate to distracted;
-            
-            
-        }
+            // change enemystate to distracted;         
+
+
+
+        } else { SourceMusic.Play(); }
 	}
 }
