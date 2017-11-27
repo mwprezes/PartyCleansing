@@ -37,7 +37,8 @@ public class StoringItems : MonoBehaviour
     {
         onObj = true;
         if (!storagefull || !temperedWith)
-            render.material.color = OnMouseColor;
+            render.material.SetColor("_OutlineColor", Color.yellow);
+        
     }
 
     void DeHighlight()
@@ -49,7 +50,7 @@ public class StoringItems : MonoBehaviour
     // Update is called once per frame
     void Update () {
         if (storagefull || temperedWith)
-            render.material.color = Full;
+            render.material.SetColor("_OutlineColor", Color.red);
     }
 
     public void Temper(string type)
