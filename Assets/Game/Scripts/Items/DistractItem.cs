@@ -19,9 +19,10 @@ public class DistractItem : MonoBehaviour {
     public bool isActive = false;
 
     EnemyStates enemy;
+    public int Score_for_Item;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;

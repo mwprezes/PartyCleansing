@@ -386,7 +386,7 @@ public class PlayerController : MonoBehaviour
                     isActivatingDS = true;
                     //DistractItem radio = hit.GetComponent<DistractItem>();
                     item.SendMessage("TurnOn");
-
+                    Score = Score - 1;
                     HintText = "Włączonooo!";
                     StartCoroutine(Wait());
 
@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour
                     isActivatingDS = false;
                     //DistractItem radio = hit.GetComponent<DistractItem>();
                     item.SendMessage("TurnOff");
-
+                   
                     HintText = "Włyłączono!";
                     StartCoroutine(Wait());
 

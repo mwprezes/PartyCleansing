@@ -12,6 +12,9 @@ public class EnemyStates : MonoBehaviour
     public AudioClip detected;
     public AudioClip a_stn;
 
+    private DistractItem dsitem;
+    private GameObject distractObject;
+
     [HideInInspector]
     public int wayAllNumber;
     [HideInInspector]
@@ -35,6 +38,8 @@ public class EnemyStates : MonoBehaviour
     private bool HintShow = false;
     private string HintText = "";
 
+
+
     void Awake()
     {
         firstWaitState = new FirstWaitState(this);
@@ -43,6 +48,7 @@ public class EnemyStates : MonoBehaviour
         waitState = new WaitState(this);
         navMeshAgent = GetComponent<NavMeshAgent>();
         distractState = new DistractState(this);
+
     }
 
 
@@ -54,12 +60,18 @@ public class EnemyStates : MonoBehaviour
         HintShow = true;
         HintText = "Knock, Knock!";
         StartCoroutine(Wait());
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
         currentState.UpdateActions();
+
+ 
     }
 
     void OnTriggerEnter(Collider otherObj)
