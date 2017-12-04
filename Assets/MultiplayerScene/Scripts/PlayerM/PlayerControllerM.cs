@@ -41,6 +41,11 @@ public class PlayerControllerM : NetworkBehaviour
     public bool HintShow = false;
     private string HintText = "";
 
+    //Sounds
+    private AudioSource a_src;
+    public AudioClip a_pickup;
+    public AudioClip a_fullStorage;
+
     // Use this for initialization
     void Start()
     {
@@ -451,4 +456,10 @@ public class PlayerControllerM : NetworkBehaviour
             this.enabled = true;
         }
     }
-}
+
+
+    public void PlaySound(AudioClip aud, float vol)
+    {
+        a_src.PlayOneShot(aud, vol);
+
+    }
