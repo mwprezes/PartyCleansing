@@ -20,6 +20,7 @@ public class EnemyControllerM : NetworkBehaviour
     private bool storageFull;
     private GameObject combine;
 
+    private Vector3 camera_rotate;
     Ray cameraRay;
     RaycastHit cameraRayHit;
     RaycastHit hit;
@@ -29,6 +30,18 @@ public class EnemyControllerM : NetworkBehaviour
     void Start()
     {
         rig = GetComponent<Rigidbody>();
+
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        //camera_rotate = new Vector3(-40.0f, 0.0f, 0.0f);
+
+        var camera = GameObject.Find("Camera");
+        var follow = camera.GetComponent("SmoothCamController");
+        follow.GetComponent<SmoothCamController>().targ = this.transform;
+        //follow.GetComponent<SmoothCamController>().transform.Rotate(camera_rotate);
 
     }
 
@@ -40,8 +53,10 @@ public class EnemyControllerM : NetworkBehaviour
 
     void Update()
     {
-        if (isLocalPlayer)
+        if (!isLocalPlayer)
         {
+            return;
+        }
             float hAxis = Input.GetAxis("Horizontal");
             float vAxis = Input.GetAxis("Vertical");
 
@@ -54,7 +69,7 @@ public class EnemyControllerM : NetworkBehaviour
 
             rig.MoveRotation(transform.rotation);
 
-            if ((hit.collider.CompareTag("Storage")) && (Input.GetKeyDown(KeyCode.F)))
+            if ((storage) && (Input.GetKeyDown(KeyCode.F)))
             {
                 if (store.locked == true)
                     lockpick.SendMessage("Lockpicking_Menu", 4);
@@ -65,7 +80,6 @@ public class EnemyControllerM : NetworkBehaviour
                     else if (store != null && storageFull) storage.SendMessage("GiveItem", this.name);
                 }
             }
-        }
     }
 
     private void OnTriggerEnter(Collider hit)

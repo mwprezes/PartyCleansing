@@ -21,7 +21,8 @@ public class RadialMenu : MonoBehaviour {
     public GameObject actiontip;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         player = GameObject.Find("Player");
         trap = player.GetComponent<Traps>();
         menuItems = buttons.Count;

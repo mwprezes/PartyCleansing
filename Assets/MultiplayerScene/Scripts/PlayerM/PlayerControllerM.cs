@@ -49,11 +49,16 @@ public class PlayerControllerM : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        rig = GetComponent<Rigidbody>();
+        
+            rig = GetComponent<Rigidbody>();
 
         HintShow = true;
         HintText = "Quick. I gotta clean this up! ";
         StartCoroutine(Wait());
+
+        var camera = GameObject.Find("Camera");
+        var follow = camera.GetComponent("SmoothCamController");
+        follow.GetComponent<SmoothCamController>().targ = this.transform;
 
     }
 
@@ -179,7 +184,7 @@ public class PlayerControllerM : NetworkBehaviour
                 }
             }
         }
-       
+
     }
 
     //Wskazówka
@@ -330,7 +335,7 @@ public class PlayerControllerM : NetworkBehaviour
                 StartCoroutine(Wait());
             }
         }
-            
+
     }
 
     private void OnTriggerStay(Collider hit)
@@ -463,3 +468,4 @@ public class PlayerControllerM : NetworkBehaviour
         a_src.PlayOneShot(aud, vol);
 
     }
+}
