@@ -24,6 +24,11 @@ public class RadialMenu : MonoBehaviour {
 	void Start ()
     {
         player = GameObject.Find("Player");
+        if (player == null)
+        {
+            return;
+        }
+
         trap = player.GetComponent<Traps>();
         menuItems = buttons.Count;
         foreach(MenuButton button in buttons)
@@ -36,10 +41,32 @@ public class RadialMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetCurrMenuItem();
-        if (Input.GetButtonDown("Fire1"))
-            ButtonAction();
+        if (player != null)
+        {
+            GetCurrMenuItem();
+            if (Input.GetButtonDown("Fire1"))
+                ButtonAction();
+        }
 	}
+
+    private void LateUpdate()
+    {
+        if (player == null)
+        {
+            player = GameObject.Find("Player(Clone)");
+            if (player != null)
+            {
+                trap = player.GetComponent<Traps>();
+                menuItems = buttons.Count;
+                foreach (MenuButton button in buttons)
+                {
+                    button.ico.color = button.color;
+                }
+                currMenuItem = 0;
+                oldMenuItem = 0;
+            }
+        }
+    }
 
     public void GetCurrMenuItem()
     {

@@ -6,6 +6,7 @@ public class Traps : MonoBehaviour {
 
     private GameObject thing;
     private PlayerController player;
+    private PlayerControllerM playerM;
 
     public GameObject menu;
     public GameObject cam;
@@ -18,70 +19,141 @@ public class Traps : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         player = GetComponent<PlayerController>();
+        if(player == null)
+            playerM = GetComponent<PlayerControllerM>();
+
+        menu = GameObject.Find("CanvasP");
         menu.SetActive(false);
+        cam = GameObject.Find("Camera");
         rad = cam.GetComponent<RadialMenu>();
         rad.enabled = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (thing != null)
+        if (player != null)
         {
-            StoringItems store = thing.GetComponent<StoringItems>();
-            if (player.actionPoints > 0 && Input.GetKeyDown(KeyCode.E) && !store.temperedWith && !player.isHolding)
+            if (thing != null)
             {
-                //UI
-                isShowing = true;
-                menu.SetActive(true);
-                rad.enabled = true;
+                StoringItems store = thing.GetComponent<StoringItems>();
+                if (player.actionPoints > 0 && Input.GetKeyDown(KeyCode.E) && !store.temperedWith && !player.isHolding)
+                {
+                    //UI
+                    isShowing = true;
+                    menu.SetActive(true);
+                    rad.enabled = true;
+                }
             }
-        }
-        // Pierwsze "spojrzenie" do "szafy" aktywuje
-        if (thing != null) {
-            StoringItems store = thing.GetComponent<StoringItems>();
-            if (!store.temperedWith && !store.storagefull && trapType == "Cake")
+            // Pierwsze "spojrzenie" do "szafy" aktywuje
+            if (thing != null)
             {
-                //Trap
-                player.PlaySound(a_setATrap, 1.0f);
-                thing.AddComponent<CakeTrap>();
-                store.trapName = "CakeTrap";
-                store.temperedWith = true;
-                store.Temper("Trap");
-                store.storagefull = true;
-                player.actionPoints -= 1;
+                StoringItems store = thing.GetComponent<StoringItems>();
+                if (!store.temperedWith && !store.storagefull && trapType == "Cake")
+                {
+                    //Trap
+                    player.PlaySound(a_setATrap, 1.0f);
+                    thing.AddComponent<CakeTrap>();
+                    store.trapName = "CakeTrap";
+                    store.temperedWith = true;
+                    store.Temper("Trap");
+                    store.storagefull = true;
+                    player.actionPoints -= 1;
+                    if (isShowing)
+                    {
+                        isShowing = !isShowing;
+                        menu.SetActive(false);
+                        rad.enabled = false;
+                    }
+                    trapType = null;
+                }
+                else if (!store.temperedWith && trapType == "BasicLock")
+                {
+                    //Lock
+                    player.PlaySound(a_setATrap, 1.0f);
+                    thing.AddComponent<BasicLock>();
+                    store.trapName = "BasicLock";
+                    store.temperedWith = true;
+                    store.Temper("Lock");
+                    player.actionPoints -= 1;
+                    if (isShowing)
+                    {
+                        isShowing = !isShowing;
+                        menu.SetActive(false);
+                        rad.enabled = false;
+                    }
+                    trapType = null;
+                }
+            }
+            else
+            {
                 if (isShowing)
                 {
                     isShowing = !isShowing;
                     menu.SetActive(false);
                     rad.enabled = false;
                 }
-                trapType = null;
             }
-            else if (!store.temperedWith && trapType == "BasicLock")
+        } else if(playerM != null)
+        {
+            if (thing != null)
             {
-                //Lock
-                player.PlaySound(a_setATrap, 1.0f);
-                thing.AddComponent<BasicLock>();
-                store.trapName = "BasicLock";
-                store.temperedWith = true;
-                store.Temper("Lock");
-                player.actionPoints -= 1;
+                StoringItems store = thing.GetComponent<StoringItems>();
+                if (playerM.actionPoints > 0 && Input.GetKeyDown(KeyCode.E) && !store.temperedWith && !playerM.isHolding)
+                {
+                    //UI
+                    isShowing = true;
+                    menu.SetActive(true);
+                    rad.enabled = true;
+                }
+            }
+            // Pierwsze "spojrzenie" do "szafy" aktywuje
+            if (thing != null)
+            {
+                StoringItems store = thing.GetComponent<StoringItems>();
+                if (!store.temperedWith && !store.storagefull && trapType == "Cake")
+                {
+                    //Trap
+                    playerM.PlaySound(a_setATrap, 1.0f);
+                    thing.AddComponent<CakeTrap>();
+                    store.trapName = "CakeTrap";
+                    store.temperedWith = true;
+                    store.Temper("Trap");
+                    store.storagefull = true;
+                    playerM.actionPoints -= 1;
+                    if (isShowing)
+                    {
+                        isShowing = !isShowing;
+                        menu.SetActive(false);
+                        rad.enabled = false;
+                    }
+                    trapType = null;
+                }
+                else if (!store.temperedWith && trapType == "BasicLock")
+                {
+                    //Lock
+                    playerM.PlaySound(a_setATrap, 1.0f);
+                    thing.AddComponent<BasicLock>();
+                    store.trapName = "BasicLock";
+                    store.temperedWith = true;
+                    store.Temper("Lock");
+                    playerM.actionPoints -= 1;
+                    if (isShowing)
+                    {
+                        isShowing = !isShowing;
+                        menu.SetActive(false);
+                        rad.enabled = false;
+                    }
+                    trapType = null;
+                }
+            }
+            else
+            {
                 if (isShowing)
                 {
                     isShowing = !isShowing;
                     menu.SetActive(false);
                     rad.enabled = false;
                 }
-                trapType = null;
-            }
-        }
-        else
-        {
-            if (isShowing)
-            {
-                isShowing = !isShowing;
-                menu.SetActive(false);
-                rad.enabled = false;
             }
         }
     }

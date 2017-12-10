@@ -49,14 +49,20 @@ public class PlayerControllerM : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        
-            rig = GetComponent<Rigidbody>();
+        var camera = GameObject.Find("Camera");
+
+        if (!isLocalPlayer)
+        {
+            camera.GetComponent<Camera>().enabled = false;
+            return;
+        }
+
+        rig = GetComponent<Rigidbody>();
 
         HintShow = true;
         HintText = "Quick. I gotta clean this up! ";
         StartCoroutine(Wait());
 
-        var camera = GameObject.Find("Camera");
         var follow = camera.GetComponent("SmoothCamController");
         follow.GetComponent<SmoothCamController>().targ = this.transform;
 
@@ -235,12 +241,12 @@ public class PlayerControllerM : NetworkBehaviour
             GUI.color = Color.magenta;
             GUI.Label(new Rect(10, 10, 100, 100), "Score: " + Score);
 
-            if (HintShow)
+            /*if (HintShow)
             {
                 GUI.color = Color.white;
                 var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
                 GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
-            }
+            }*/
         }
     }
 

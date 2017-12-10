@@ -81,12 +81,12 @@ public class EnemyStates : MonoBehaviour
 
     void OnGUI()
     {
-        if (HintShow)
+        /*if (HintShow)
         {
             GUI.color = Color.white;
             var HintPosition = Camera.main.WorldToScreenPoint(gameObject.transform.position);
             GUI.Label(new Rect(HintPosition.x - 20, Screen.height - HintPosition.y - 70, 250, 25), "<size=18>" + HintText + "</size>");
-        }
+        }*/
     }
 
     IEnumerator Wait()

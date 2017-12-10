@@ -10,6 +10,7 @@ public class EnemyControllerM : NetworkBehaviour
 
     public float speed = 5;
     private Rigidbody rig;
+    private bool mouseLock = true;
 
     Rigidbody potentialHeldObj;
     GameObject potTest;
@@ -29,18 +30,27 @@ public class EnemyControllerM : NetworkBehaviour
     Lockpicking lockpick;
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         rig = GetComponent<Rigidbody>();
+        //Instantiate(GameObject.Find("Camera FPS"));
+        //var camera = GameObject.Find("Camera FPS(Clone)");
+        var camera = GameObject.Find("Camera FPS");
 
         if (!isLocalPlayer)
         {
+            camera.GetComponent<Camera>().enabled = false;
             return;
         }
 
         //camera_rotate = new Vector3(-40.0f, 0.0f, 0.0f);
+        Destroy(gameObject.GetComponent<EnemyStates>());
+        
 
-        var camera = GameObject.Find("Camera");
-        var follow = camera.GetComponent("SmoothCamController");
-        follow.GetComponent<SmoothCamController>().targ = this.transform;
+        rig.isKinematic = false;
+        rig.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        var follow = camera.GetComponent("FPScamController");
+        follow.GetComponent<FPScamController>().targ = this.transform;
         //follow.GetComponent<SmoothCamController>().transform.Rotate(camera_rotate);
 
     }
@@ -57,19 +67,34 @@ public class EnemyControllerM : NetworkBehaviour
         {
             return;
         }
-            float hAxis = Input.GetAxis("Horizontal");
-            float vAxis = Input.GetAxis("Vertical");
 
-            Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
-            Vector3 rot = new Vector3(hAxis, 0, vAxis);
-            if (rot != new Vector3(0, 0, 0))
-                transform.rotation = Quaternion.LookRotation(rot);
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (mouseLock)
+                Cursor.lockState = CursorLockMode.None;
+            else
+                Cursor.lockState = CursorLockMode.Locked;
+            mouseLock = !mouseLock;
+        }
 
-            rig.MovePosition(transform.position + movement);
+        float hAxis = Input.GetAxis("Horizontal") * speed;
+        float vAxis = Input.GetAxis("Vertical") * speed;
 
-            rig.MoveRotation(transform.rotation);
+        hAxis *= Time.deltaTime;
+        vAxis *= Time.deltaTime;
 
-            if ((storage) && (Input.GetKeyDown(KeyCode.F)))
+        transform.Translate(hAxis, 0, vAxis);
+
+        //Vector3 movement = new Vector3(hAxis, 0, vAxis) * speed * Time.deltaTime;
+        /*Vector3 rot = new Vector3(hAxis, 0, vAxis);
+        if (rot != new Vector3(0, 0, 0))
+            transform.rotation = Quaternion.LookRotation(rot);*/
+
+        //rig.MovePosition(transform.position + movement);
+
+        //rig.MoveRotation(transform.rotation);
+
+        if ((storage) && (Input.GetKeyDown(KeyCode.F)))
             {
                 if (store.locked == true)
                     lockpick.SendMessage("Lockpicking_Menu", 4);
