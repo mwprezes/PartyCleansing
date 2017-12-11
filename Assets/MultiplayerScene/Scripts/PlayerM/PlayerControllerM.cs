@@ -49,14 +49,19 @@ public class PlayerControllerM : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        var camera = GameObject.Find("Camera");
 
+        var camera = GameObject.Find("Camera1");
+        
         if (!isLocalPlayer)
         {
             camera.GetComponent<Camera>().enabled = false;
             return;
         }
 
+        var camera2 = GameObject.Find("CameraFPS");
+        camera2.GetComponent<Camera>().enabled = false;
+
+        camera.GetComponent<Camera>().enabled = true;
         a_src = GetComponent<AudioSource>();
 
         rig = GetComponent<Rigidbody>();

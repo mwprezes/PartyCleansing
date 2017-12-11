@@ -23,7 +23,7 @@ public class PlayerChooseM : NetworkManager
         GameObject player;
         Transform startPos = GetStartPosition();
 
-        if (conn.hostId == playerControllerId)
+        if (conn.hostId != playerControllerId)
         {
             Vector3 pos = new Vector3(-7.2f, 6.5f, -30.7f);
             player = Instantiate(characters[0], pos, startPos.rotation) as GameObject;
