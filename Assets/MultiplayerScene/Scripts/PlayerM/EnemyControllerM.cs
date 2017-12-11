@@ -11,6 +11,7 @@ public class EnemyControllerM : NetworkBehaviour
     public float speed = 5;
     private Rigidbody rig;
     private bool mouseLock = true;
+    private ProgressBar pBar;
 
     Rigidbody potentialHeldObj;
     GameObject potTest;
@@ -34,7 +35,7 @@ public class EnemyControllerM : NetworkBehaviour
         rig = GetComponent<Rigidbody>();
         //Instantiate(GameObject.Find("Camera FPS"));
         //var camera = GameObject.Find("Camera FPS(Clone)");
-        var camera = GameObject.Find("Camera FPS");
+        var camera = GameObject.Find("Camera_FPS");
 
         if (!isLocalPlayer)
         {
@@ -44,7 +45,7 @@ public class EnemyControllerM : NetworkBehaviour
 
         //camera_rotate = new Vector3(-40.0f, 0.0f, 0.0f);
         //Destroy(gameObject.GetComponent<EnemyStates>());
-        
+        pBar = GetComponent<ProgressBar>();
 
         rig.isKinematic = false;
         rig.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -161,11 +162,17 @@ public class EnemyControllerM : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            pBar.rate = 100 * pBar.time / time;
+            pBar.active = true;
+            Debug.Log("rate" + pBar.rate);
+
             this.enabled = false;
 
             yield return new WaitForSeconds(time);
 
             this.enabled = true;
+            //pBar.active = false;
+
         }
     }
 
