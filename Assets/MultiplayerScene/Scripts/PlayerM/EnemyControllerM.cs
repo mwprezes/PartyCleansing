@@ -43,7 +43,7 @@ public class EnemyControllerM : NetworkBehaviour
         }
 
         //camera_rotate = new Vector3(-40.0f, 0.0f, 0.0f);
-        Destroy(gameObject.GetComponent<EnemyStates>());
+        //Destroy(gameObject.GetComponent<EnemyStates>());
         
 
         rig.isKinematic = false;
@@ -94,17 +94,27 @@ public class EnemyControllerM : NetworkBehaviour
 
         //rig.MoveRotation(transform.rotation);
 
-        if ((storage) && (Input.GetKeyDown(KeyCode.F)))
-            {
-                if (store.locked == true)
-                    lockpick.SendMessage("Lockpicking_Menu", 4);
+        if ((storage != null) && (Input.GetKeyDown(KeyCode.F)))
+        {
+            StartCoroutine(Stun(1.0f));
+            //Pasek "searching" czy coś na gui by się przydał
 
-                if (store.locked == false)
-                {
-                    if (store != null && !storageFull) Debug.Log("Pusto");
-                    else if (store != null && storageFull) storage.SendMessage("GiveItem", this.name);
-                }
+            if (store.locked == true)
+                lockpick.SendMessage("Lockpicking_Menu", 4);
+
+            if (store.locked == false)
+            {
+                if (store != null && !storageFull) Debug.Log("Pusto");
+                else if (store != null)
+                    if (store.Storage.Count > 0)
+                        storage.SendMessage("GiveItem", this.name);
+                //else if (store != null && storageFull) storage.SendMessage("GiveItem", this.name);
             }
+        }
+        if ((potentialHeldObj != null) && (Input.GetKeyDown(KeyCode.F)))
+        {
+            pickUp(potentialHeldObj.gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider hit)
@@ -116,7 +126,83 @@ public class EnemyControllerM : NetworkBehaviour
                 storage = hit.gameObject;
                 store = storage.GetComponent<StoringItems>();
             }
+
+            if(hit.gameObject.tag == "Pickable")
+            {
+                potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
+            }
+        }        
+    }
+
+    private void OnTriggerStay(Collider hit)
+    {
+        if (isLocalPlayer)
+        {
+            if (hit.gameObject.tag == "Storage")
+            {
+                storage = hit.gameObject;
+                store = storage.GetComponent<StoringItems>();
+            }
+
+            if (hit.gameObject.tag == "Pickable")
+            {
+                potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
+            }
         }
-        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        potentialHeldObj = null;
+        storage = null;
+    }
+
+    IEnumerator Stun(float time)
+    {
+        if (isLocalPlayer)
+        {
+            this.enabled = false;
+
+            yield return new WaitForSeconds(time);
+
+            this.enabled = true;
+        }
+    }
+
+    private void pickUp(GameObject body)
+    {
+        Debug.Log("#Enemy: Woosh!");
+
+        //HintText = "Whoosh!";
+        StartCoroutine(Stun(0.5f));
+        //Stun(5.0f);
+
+        body.gameObject.transform.parent = this.transform;
+        body.gameObject.transform.localPosition = new Vector3(0, 0, 2);
+        body.GetComponent<Rigidbody>().isKinematic = true;
+
+        body.gameObject.transform.parent = null;
+        body.GetComponent<Rigidbody>().isKinematic = false;
+        if (body.tag != "Busted") body.tag = "Busted";
+    }
+
+    public void ReciveItem(GameObject rec)
+    {
+        if (rec != null)
+        {
+            Debug.Log("#Enemy: Znaleziony");
+            pickUp(rec);
+
+            //HintText = "Ha! Found YOU!";
+            StartCoroutine(Wait());
+
+        }
+        else
+        {
+            Debug.Log("#Enemy: Pusto");
+
+            //HintText = "Empty...";
+            StartCoroutine(Wait());
+        }
     }
 }

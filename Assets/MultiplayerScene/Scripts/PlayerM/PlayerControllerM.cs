@@ -57,6 +57,8 @@ public class PlayerControllerM : NetworkBehaviour
             return;
         }
 
+        a_src = GetComponent<AudioSource>();
+
         rig = GetComponent<Rigidbody>();
 
         HintShow = true;
@@ -472,6 +474,5 @@ public class PlayerControllerM : NetworkBehaviour
     public void PlaySound(AudioClip aud, float vol)
     {
         a_src.PlayOneShot(aud, vol);
-
     }
 }
