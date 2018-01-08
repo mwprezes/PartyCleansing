@@ -166,7 +166,7 @@ public class EnemyControllerM : NetworkBehaviour
         {
             pBar.rate = 100 * pBar.time / time;
             pBar.active = true;
-            Debug.Log("rate" + pBar.rate);
+            //Debug.Log("rate" + pBar.rate);
 
             this.enabled = false;
 
@@ -210,21 +210,24 @@ public class EnemyControllerM : NetworkBehaviour
 
     public void ReciveItem(GameObject rec)
     {
-        if (rec != null)
+        if (isLocalPlayer)
         {
-            Debug.Log("#Enemy: Znaleziony");
-            pickUp(rec);
+            if (rec != null)
+            {
+                Debug.Log("#Enemy: Znaleziony");
+                pickUp(rec);
 
-            //HintText = "Ha! Found YOU!";
-            StartCoroutine(Wait());
+                //HintText = "Ha! Found YOU!";
+                StartCoroutine(Wait());
 
-        }
-        else
-        {
-            Debug.Log("#Enemy: Pusto");
+            }
+            else
+            {
+                Debug.Log("#Enemy: Pusto");
 
-            //HintText = "Empty...";
-            StartCoroutine(Wait());
+                //HintText = "Empty...";
+                StartCoroutine(Wait());
+            }
         }
     }
 }

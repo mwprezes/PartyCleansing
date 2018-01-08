@@ -113,7 +113,8 @@ public class PlayerControllerM : NetworkBehaviour
                         HintText = "Uff, it's hiden!";
                         StartCoroutine(Wait());
 
-                        storage.SendMessage("Store", heldObj.gameObject);
+                        //storage.SendMessage("Store", heldObj.gameObject);
+                        CmdStoreItem(heldObj.gameObject, storage);
                         heldObj = null;
                         //potentialHeldObj = null;
                         Carried_Weight = 0;
@@ -198,6 +199,12 @@ public class PlayerControllerM : NetworkBehaviour
             }
         }
 
+    }
+
+    [Command]
+    void CmdStoreItem(GameObject what, GameObject where)
+    {
+        where.GetComponent<StoringItems>().AddToStore(what);
     }
 
     //Wskazówka
@@ -461,12 +468,19 @@ public class PlayerControllerM : NetworkBehaviour
             //Rigidbody held = this.gameObject.GetComponentInChildren<Rigidbody>();
             heldObj.isKinematic = false;
             heldObj.transform.parent = null;
-            heldObj.tag = "Busted";
+            //heldObj.tag = "Busted";
+            CmdBustItem(heldObj.gameObject);
             heldObj = null;
             isHolding = false;
             Carried_Weight = 0;
         }
 
+    }
+
+    [Command]
+    private void CmdBustItem(GameObject body)
+    {
+        body.GetComponent<GrabAndDrop>().ChgTag("Busted");
     }
 
     IEnumerator Stun(float time)

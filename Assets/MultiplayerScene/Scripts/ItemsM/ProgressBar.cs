@@ -48,7 +48,7 @@ public class ProgressBar : MonoBehaviour {
     IEnumerator UpdateProgress()
     {
         progress += rate;
-        Debug.Log("Progress: " + progress);
+        //Debug.Log("Progress: " + progress);
         done = false;
         yield return new WaitForSeconds(time);
         //Debug.Log("Hello after time");
