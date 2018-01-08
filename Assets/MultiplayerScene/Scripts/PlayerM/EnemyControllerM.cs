@@ -35,7 +35,7 @@ public class EnemyControllerM : NetworkBehaviour
         rig = GetComponent<Rigidbody>();
         //Instantiate(GameObject.Find("Camera FPS"));
         //var camera = GameObject.Find("Camera FPS(Clone)");
-        var camera = GameObject.Find("Camera_FPS");
+        var camera = GameObject.Find("CameraFPS");
 
         if (!isLocalPlayer)
         {

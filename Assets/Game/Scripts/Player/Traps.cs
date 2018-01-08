@@ -24,7 +24,7 @@ public class Traps : MonoBehaviour {
 
         menu = GameObject.Find("CanvasP");
         menu.SetActive(false);
-        cam = GameObject.Find("Camera");
+        cam = GameObject.Find("Camera1");
         rad = cam.GetComponent<RadialMenu>();
         rad.enabled = false;
 	}

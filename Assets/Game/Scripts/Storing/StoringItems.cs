@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Networking;
 
 public class StoringItems : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class StoringItems : MonoBehaviour
 
     // Use this for initialization
     void Start () {
-		offset = new Vector3(0,0,0);
+		//offset = new Vector3(0,0,0);
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
         stored = null;
@@ -82,6 +83,14 @@ public class StoringItems : MonoBehaviour
                     ob.transform.parent = this.transform;
                     ob.transform.localPosition = offset;
                     ob.GetComponent<Rigidbody>().isKinematic = true;
+                    // updating tags
+                    //List<NetworkClient> clients = new List<NetworkClient>(NetworkClient.allClients);
+                    //foreach(NetworkClient c in clients)
+                    //{
+                    //    //MessageBase 
+                    //    //c.Send(777, )
+                    //}
+
                 }
 
 
