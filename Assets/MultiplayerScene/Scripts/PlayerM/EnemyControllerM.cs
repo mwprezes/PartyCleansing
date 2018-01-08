@@ -130,7 +130,8 @@ public class EnemyControllerM : NetworkBehaviour
 
             if(hit.gameObject.tag == "Pickable")
             {
-                potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
+                if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
+                    potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
             }
         }        
     }
@@ -147,7 +148,8 @@ public class EnemyControllerM : NetworkBehaviour
 
             if (hit.gameObject.tag == "Pickable")
             {
-                potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
+                if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
+                    potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
             }
         }
     }
@@ -190,7 +192,20 @@ public class EnemyControllerM : NetworkBehaviour
 
         body.gameObject.transform.parent = null;
         body.GetComponent<Rigidbody>().isKinematic = false;
-        if (body.tag != "Busted") body.tag = "Busted";
+        //if (body.tag != "Busted") body.tag = "Busted";
+        //if (isServer)
+        {
+            //Debug.Log("Yo Server");
+            //if (body.GetComponent<GrabAndDrop>().tag != "Busted") body.GetComponent<GrabAndDrop>().tag = "Busted";
+            if (body.GetComponent<GrabAndDrop>().tag != "Busted") CmdBustItem(body);
+        }
+        
+    }
+
+    [Command]
+    private void CmdBustItem(GameObject body)
+    {
+        body.GetComponent<GrabAndDrop>().ChgTag("Busted");
     }
 
     public void ReciveItem(GameObject rec)

@@ -302,13 +302,16 @@ public class PlayerControllerM : NetworkBehaviour
         {
             if (hit.gameObject.tag == "Pickable")
             {
-                displayTipMessage("Pick me up!");
-                Debug.Log("You can pick it up!");
+                if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
+                {
+                    displayTipMessage("Pick me up!");
+                    Debug.Log("You can pick it up!");
 
-                HintText = "'F' to pick up!";
-                StartCoroutine(Wait());
+                    HintText = "'F' to pick up!";
+                    StartCoroutine(Wait());
 
-                potentialHeldObj = hit.GetComponent<Rigidbody>();
+                    potentialHeldObj = hit.GetComponent<Rigidbody>();
+                }
             }
             if (hit.gameObject.tag == "Storage")
             {
@@ -357,13 +360,16 @@ public class PlayerControllerM : NetworkBehaviour
         {
             if (hit.gameObject.tag == "Pickable")
             {
-                GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
-                if (item != null)
-                    item.SendMessage("Highlight");
-                ///
-                //displayTipMessage("Pick me up!");
-                //Debug.Log("You can pick it up!");
-                potentialHeldObj = hit.GetComponent<Rigidbody>();
+                if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
+                {
+                    GrabAndDrop item = hit.gameObject.GetComponent<GrabAndDrop>();
+                    if (item != null)
+                        item.SendMessage("Highlight");
+                    ///
+                    //displayTipMessage("Pick me up!");
+                    //Debug.Log("You can pick it up!");
+                    potentialHeldObj = hit.GetComponent<Rigidbody>();
+                }
             }
             if (hit.gameObject.tag == "Storage")
             {

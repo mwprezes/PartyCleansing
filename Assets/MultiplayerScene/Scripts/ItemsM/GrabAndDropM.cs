@@ -14,6 +14,10 @@ public class GrabAndDropM : MonoBehaviour
     public int Score_for_Item;
     public float Weight;
 
+
+    public string tag = "Pickable";
+
+
     // Use this for initialization
     void Start()
     {
