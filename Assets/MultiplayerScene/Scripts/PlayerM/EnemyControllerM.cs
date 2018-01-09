@@ -36,9 +36,11 @@ public class EnemyControllerM : NetworkBehaviour
         //Instantiate(GameObject.Find("Camera FPS"));
         //var camera = GameObject.Find("Camera FPS(Clone)");
         var camera = GameObject.Find("CameraFPS");
+        var wall = GameObject.Find("Sciany");
 
         if (!isLocalPlayer)
         {
+            wall.transform.localScale = new Vector3(1.0f, 2.5f, 1.0f);
             camera.GetComponent<Camera>().enabled = false;
             return;
         }

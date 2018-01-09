@@ -30,8 +30,8 @@ public class Timer : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.color = Color.magenta;
-        GUI.skin.label.fontSize = 21;
+        GUI.color = Color.black;
+        GUI.skin.label.fontSize = 22;
 
         if (seconds >= 10) textTime = minutes + ":" + seconds;
         else textTime = minutes + ":0" + seconds;

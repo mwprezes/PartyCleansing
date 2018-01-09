@@ -36,6 +36,7 @@ public class PlayerControllerM : NetworkBehaviour
     public TextEditor text;
     static public int Score = 0;
     public float Carried_Weight;
+    private GameObject door;
 
     // Olsza's HINTS 
     public bool HintShow = false;
@@ -181,6 +182,12 @@ public class PlayerControllerM : NetworkBehaviour
                     storage.SendMessage("GiveItem", this.name);
                     //Carried_Weight = 0;
                 }
+
+                if ((door != null) && (Input.GetKeyDown(KeyCode.F)))
+                {
+                    Debug.Log("door pressed f");
+                    door.GetComponent<DoorScript>().locked = false;
+                }
             }
 
             //Wskazówka
@@ -252,6 +259,7 @@ public class PlayerControllerM : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            GUI.skin.label.fontSize = 16;
             GUI.color = Color.magenta;
             GUI.Label(new Rect(10, 10, 100, 100), "Score: " + Score);
 
@@ -357,6 +365,13 @@ public class PlayerControllerM : NetworkBehaviour
                 HintText = " 'F' to combine!";
                 StartCoroutine(Wait());
             }
+
+            if (hit.gameObject.tag == "Doors")
+            {
+                Debug.Log(hit.transform.gameObject.GetComponent<GameObject>());
+                door = hit.gameObject.GetComponent<GameObject>();
+                if (door != null) Debug.Log("Door in place");
+            }
         }
 
     }
@@ -396,6 +411,12 @@ public class PlayerControllerM : NetworkBehaviour
                     //Debug.Log("This one is full!");
                     //storage = null;
                 }
+            }
+            if (hit.gameObject.tag == "Doors")
+            {
+                
+                door = hit.transform.gameObject.GetComponent<GameObject>();
+                if (door != null) Debug.Log("Door in place");
             }
         }
     }
