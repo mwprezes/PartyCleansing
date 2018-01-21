@@ -28,7 +28,7 @@ public class Timer : MonoBehaviour
         }
     }
 
-    void OnGUI()
+    /*void OnGUI()
     {
         GUI.color = Color.magenta;
         GUI.skin.label.fontSize = 21;
@@ -37,6 +37,6 @@ public class Timer : MonoBehaviour
         else textTime = minutes + ":0" + seconds;
 
         GUI.Label(new Rect(360, 10, 200, 250), textTime);
-    }
+    }*/
 
 }
