@@ -27,7 +27,7 @@ public class MenuScript : MonoBehaviour {
     void OnGUI()
     {
 		GUI.skin = skin;
-		GUI.BeginGroup(new Rect(100, screenMargin, buttonWidth+50, (buttonHeight * buttonMargin)*4));
+		GUI.BeginGroup(new Rect(100, screenMargin, buttonWidth*3, (buttonHeight * buttonMargin)*4));
         if (window == 1)
         {
 			if (GUI.Button(new Rect(0, 0, buttonWidth, buttonHeight), "PLAY"))
@@ -64,8 +64,8 @@ public class MenuScript : MonoBehaviour {
 
         if (window == 3)
         {
-			GUI.Label(new Rect (10, screenMargin, Screen.width/2, Screen.height/2), control);
-			if (GUI.Button(new Rect(10, buttonHeight * 7 + screenMargin, buttonWidth,  buttonHeight), "BACK TO MENU"))
+			GUI.Label(new Rect (10, screenMargin, Screen.width/1.5f, Screen.height/1.5f), control);
+			if (GUI.Button(new Rect(10, buttonHeight * 8 + screenMargin, buttonWidth,  buttonHeight), "BACK TO MENU"))
             {
                 window = 1;
             }
