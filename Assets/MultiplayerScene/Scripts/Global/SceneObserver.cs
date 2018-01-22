@@ -6,14 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class SceneObserver : NetworkBehaviour
 {
-
+    [SyncVar]
     GameTimer timer;
-    PlayerChooseM network;
+    public PlayerChooseM network;
     static SceneObserver _instance;
 
     [SyncVar]
     public bool round2 = false;
     public bool end = false;
+    public int hostID = -1;
 
     //Add this in scene explorer
     public GameObject door;
@@ -31,9 +32,13 @@ public class SceneObserver : NetworkBehaviour
         else
             Destroy(this.gameObject);
     }
-        void Start () {
+
+    void Start ()
+    {
         timer = GameObject.Find("TimerGO").GetComponent<GameTimer>();
         network = GameObject.Find("NetworkManager").GetComponent<PlayerChooseM>();
+        door = GameObject.Find("Door");
+        hostID = network.host_id;
         //DontDestroyOnLoad(this.gameObject);
         DontDestroyOnLoad(this);
     }
@@ -41,7 +46,15 @@ public class SceneObserver : NetworkBehaviour
     // Update is called once per frame
     void Update () {
 		
-        if(NetworkServer.connections.Count >= 2 && !round2)
+        if(network.host_id == -1 && hostID != -1)
+        {
+            network.host_id = hostID;
+        }
+
+        if (network.P1Ready && network.P2Ready && round2)
+            timer.start = true;
+
+        if(NetworkServer.connections.Count >= 1 && !round2)
         {
             //Debug.Log("I see a player");
             timer.start = true;
@@ -54,11 +67,28 @@ public class SceneObserver : NetworkBehaviour
         if (timer.gameover)
         {
             //SceneManager.LoadScene("MultiplayerScene");
-            network.ServerChangeScene("MultiplayerScene");
-            //NetworkServer.Reset();
+            if (round2)
+            {
+                network.ServerChangeScene("ScoreBoard");
+                round2 = false;
+                end = true;
+            }
+            else
+            {
+                network.ServerChangeScene("MultiplayerScene");
+                //NetworkServer.Reset();
 
-            timer.gameover = false;
-            round2 = true;
+                timer.gameover = false;
+                round2 = true;
+            }
         }
 	}
+    private void LateUpdate()
+    {
+        if(timer == null)
+            timer = GameObject.Find("TimerGO").GetComponent<GameTimer>();
+        if(door == null)
+            door = GameObject.Find("Door");
+
+    }
 }

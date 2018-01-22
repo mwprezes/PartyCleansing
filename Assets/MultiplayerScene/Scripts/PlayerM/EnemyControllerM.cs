@@ -26,6 +26,7 @@ public class EnemyControllerM : NetworkBehaviour
     Ray cameraRay;
     RaycastHit cameraRayHit;
     RaycastHit hit;
+    GameObject camera;
 
     StoringItems store;
     Lockpicking lockpick;
@@ -35,7 +36,7 @@ public class EnemyControllerM : NetworkBehaviour
         rig = GetComponent<Rigidbody>();
         //Instantiate(GameObject.Find("Camera FPS"));
         //var camera = GameObject.Find("Camera FPS(Clone)");
-        var camera = GameObject.Find("CameraFPS");
+        camera = GameObject.Find("CameraFPS");
 
         if (!isLocalPlayer)
         {
@@ -52,10 +53,17 @@ public class EnemyControllerM : NetworkBehaviour
 
         var follow = camera.GetComponent("FPScamController");
         follow.GetComponent<FPScamController>().targ = this.transform;
+        camera.GetComponent<Camera>().enabled = true;
         //follow.GetComponent<SmoothCamController>().transform.Rotate(camera_rotate);
 
     }
 
+    private void OnDestroy()
+    {
+        camera.GetComponent<FPScamController>().targ = null;
+        camera.transform.parent = null;
+        //camera.GetComponent<FPScamController>().targ = null;
+    }
 
     IEnumerator Wait()
     {
