@@ -46,7 +46,7 @@ public class StoringItems : NetworkBehaviour
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
         stored = null;
-        render.material.SetColor("_OutlineColor", Color.yellow);
+        render.material.SetColor("_OutlineColor", Color.black);
 
         List<GameObject> Storage = new List<GameObject>();
     }
@@ -54,8 +54,12 @@ public class StoringItems : NetworkBehaviour
     void Highlight()
     {
         onObj = true;
-        if (!storagefull || !temperedWith)
+        if (!storagefull)
             render.material.SetColor("_OutlineColor", Color.yellow);
+        else
+        {
+            render.material.SetColor("_OutlineColor", Color.red);
+        }
         
     }
 
@@ -63,15 +67,20 @@ public class StoringItems : NetworkBehaviour
     {
         onObj = false;
         render.material.color = BasicColor;
-        render.material.SetColor("_OutlineColor", Color.black);
+        
+        if (storagefull || temperedWith)
+            render.material.SetColor("_OutlineColor", Color.red);
+        else
+            render.material.SetColor("_OutlineColor", Color.black);
+        
     }
 
     // Update is called once per frame
     void Update ()
     {
-        if (storagefull || temperedWith)
-            //render.material.SetColor("_OutlineColor", Color.red);
-            render.material.color = Color.red;
+        if (storagefull || temperedWith) { }
+           // render.material.SetColor("_OutlineColor", Color.red);
+            //render.material.color = Color.red;
     }
 
     public void Temper(string type)
