@@ -20,6 +20,8 @@ public class GameTimer : NetworkBehaviour
     void Start() {
         start = false;
         gameover = false;
+
+
     }
 
     // Update is called once per frame
