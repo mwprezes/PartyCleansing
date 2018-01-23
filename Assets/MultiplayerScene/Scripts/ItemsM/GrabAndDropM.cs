@@ -23,6 +23,7 @@ public class GrabAndDropM : MonoBehaviour
     {
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
+        SetScore(Score_for_Item);
     }
 
     void Highlight()

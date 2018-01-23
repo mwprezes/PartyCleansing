@@ -9,6 +9,8 @@ public class SceneObserver : NetworkBehaviour
     //[SyncVar]
     GameTimer timer;
     public PlayerChooseM network;
+    public PlayerControllerM player1;
+    public EnemyControllerM player2;
     static SceneObserver _instance;
 
     [SyncVar]
@@ -21,7 +23,9 @@ public class SceneObserver : NetworkBehaviour
     //Add this in scene explorer
     public GameObject door;
 
+    [SyncVar]
     public float P1_Points = 0;
+    [SyncVar]
     public float P2_Points = 0;
 
     // Use this for initialization
@@ -39,6 +43,8 @@ public class SceneObserver : NetworkBehaviour
     {
         timer = GameObject.Find("TimerGO").GetComponent<GameTimer>();
         network = GameObject.Find("NetworkManager").GetComponent<PlayerChooseM>();
+        player1 = GameObject.Find("Player(Clone)").GetComponent<PlayerControllerM>();
+        player2 = GameObject.Find("Enemy(Clone)").GetComponent<EnemyControllerM>();
         door = GameObject.Find("Door");
         hostID = network.host_id;
         //DontDestroyOnLoad(this.gameObject);
@@ -50,7 +56,8 @@ public class SceneObserver : NetworkBehaviour
 
         if (timer != null)
         {
-
+            P1_Points = player1.PlayerScore;
+            P2_Points = player2.EnemyScore;
             if (network.host_id == -1 && hostID != -1)
             {
                 network.host_id = hostID;

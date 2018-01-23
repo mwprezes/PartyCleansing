@@ -59,7 +59,7 @@ public class GameTimer : NetworkBehaviour
     void OnGUI()
     {
         GUI.color = Color.green;
-        GUI.skin.label.fontSize = 21;
+        GUI.skin.label.fontSize = 16;
 
         string textTime = "";
 

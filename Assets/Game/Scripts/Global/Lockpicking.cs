@@ -9,9 +9,11 @@ public class Lockpicking : MonoBehaviour
     public int[] inserted_password;
 
     StoringItems store;
+    GameObject door;
     public string message_on_text;
     private bool text_after;
 
+    public bool dzwi = false;
     public bool activ;
     public int iter;
     public int max_liczb;
@@ -52,7 +54,8 @@ public class Lockpicking : MonoBehaviour
             activ = false;
             iter = 0;
             result_good = true;
-            Destroy(store.GetComponent<BasicLock>());
+            if (dzwi == false) Destroy(store.GetComponent<BasicLock>());
+            else Destroy(door);
             return true;
         }
         else
@@ -84,6 +87,13 @@ public class Lockpicking : MonoBehaviour
     public void bound (StoringItems receive)
     {
         store = receive;
+        dzwi = false;
+    }
+
+    public void bound(GameObject gmObj)
+    {
+        door = gmObj;
+        dzwi = true;
     }
 
     public void lockpick_result(int k)
@@ -116,7 +126,7 @@ public class Lockpicking : MonoBehaviour
 
             if (GUI.Button(new Rect(620, 120, 80, 150), "EXIT")) Exit_from_locpick();
 
-            GUI.Label(new Rect(440, 350, 300, 40), message_on_text);
+            GUI.Label(new Rect(300, 400, 350, 50), message_on_text);
         }
     }
 }
