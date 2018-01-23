@@ -54,7 +54,7 @@ public class StoringItems : NetworkBehaviour
     void Highlight()
     {
         onObj = true;
-        if (!storagefull)
+        if (!storagefull&&!temperedWith)
             render.material.SetColor("_OutlineColor", Color.yellow);
         else
         {
@@ -78,7 +78,7 @@ public class StoringItems : NetworkBehaviour
     // Update is called once per frame
     void Update ()
     {
-        if (storagefull || temperedWith) { }
+       // if (storagefull || temperedWith) { }
            // render.material.SetColor("_OutlineColor", Color.red);
             //render.material.color = Color.red;
     }

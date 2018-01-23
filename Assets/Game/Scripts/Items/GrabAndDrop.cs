@@ -9,7 +9,7 @@ public class GrabAndDrop : NetworkBehaviour
     private GameObject stuff;
     private Renderer render;
     private Color BasicColor;
-    private Color OnMouseColor = Color.green;
+    //private Color OnMouseColor = Color.green;
     static public bool onObj = false;
 
     public int Score_for_Item;
@@ -22,20 +22,22 @@ public class GrabAndDrop : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
+        //onObj = false;
         render = GetComponent<Renderer>();
         BasicColor = render.material.color;
+        render.material.SetColor("_OutlineColor", Color.black);
     }
 
     void Highlight()
     {
         onObj = true;
-        render.material.color = OnMouseColor;
+        render.material.SetColor("_OutlineColor", Color.green);
     }
 
     void DeHighlight()
     {
         onObj = false;
-        render.material.color = BasicColor;
+        render.material.SetColor("_OutlineColor", Color.black);
     }
     // Update is called once per frame
     void Update()

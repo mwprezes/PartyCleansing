@@ -65,7 +65,7 @@ public class PlayerChooseM : NetworkManager
         Transform startPos = GetStartPosition();
         short playerControllerId;
 
-        if (conn.hostId != host_id)
+        if (conn.hostId == host_id)
         {
             Vector3 pos = new Vector3(-7.2f, 6.5f, -30.7f);
             //host_id = conn.hostId;
