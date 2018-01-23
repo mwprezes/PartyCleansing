@@ -1,0 +1,35 @@
+V_0.03:
+	Dodanie wk³adania i wyjmowania itemów z kontenerów
+
+V_0.05: 
+	Dodanie œcian wraz z kolizj¹
+	
+V_0.06
+	Poprawienie skryptu chowania itemów do szaf (zabezpiecznie przed nadpisywaniem obiektów / zabezpieczenie przed podnoszeniem kilku itemów na raz)
+
+V_0.07
+	Integracja myszy, podszwietlenie objekta, na ktory wkazuje kursor, zielonym.
+	
+V_0.08
+	Dodanie chodz¹cego po planszy wroga, pokolorowanie i uporz¹dkowanie obiektów.
+	
+V_0.09
+	Powiêkszenie planszy, dodanie wiêkszej iloœci obiektów do podnoszenia i szaf do chowania.
+	Dodanie czasu opóŸnienia wejœcia wroga na teren mieszkania, randomowe œcie¿ki eksploracji mieszkania.
+
+V_0.1 ["The Game" update]
+	Przeciwnik mo¿e teraz przeszukiwaæ szafki, reaguje na itemy na pod³odzê i gracza.
+	Mechanika kombinacji (narazie tylko balonik który zabiera item :D)
+	
+V_0.11
+	Dodanie napisów nad niektórymi obiektami
+	
+V_0.12
+	Gracz musi iœæ przywitaæ wroga, ¿eby ten zacz¹³ szturm na chatê.
+	Przeciwnik uzale¿niony od wskaŸnika cierpliwoœci - im d³u¿ej czeka na gracza, tym wiêcej szafek
+	bêdzie przeszukiwa³. 
+V_0.12.1
+	Menu.
+	System punktow.
+	Roznorodnosc przedmiotow.
+	+ bagi i praca na przyszlosc.

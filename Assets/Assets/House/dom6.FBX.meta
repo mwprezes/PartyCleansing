@@ -1,0 +1,274 @@
+fileFormatVersion: 2
+guid: c6c33c7517e56f64da25c0ae5f409ab6
+timeCreated: 1510008400
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: ' 1'
+    100002: bathroom
+    100004: bedroom1
+    100006: bedroom2
+    100008: column1
+    100010: column2
+    100012: //RootNode
+    100014: doorgarage
+    100016: Floor1
+    100018: Floor10
+    100020: Floor11
+    100022: Floor12
+    100024: Floor12_MeshPart0
+    100026: Floor12_MeshPart1
+    100028: Floor2
+    100030: Floor3
+    100032: Floor4
+    100034: Floor5
+    100036: Floor6
+    100038: Floor7
+    100040: Floor8
+    100042: Floor9
+    100044: FloorOut1
+    100046: FloorOut1_MeshPart0
+    100048: FloorOut1_MeshPart1
+    100050: garage
+    100052: gardenOut
+    100054: hall
+    100056: hall2
+    100058: hall3
+    100060: inWall
+    100062: kitchen&livingRoom
+    100064: outWall1
+    100066: outWall14
+    100068: outWall2
+    100070: outWall3
+    100072: outWall5
+    100074: shower
+    100076: stairs1
+    100078: stairs2
+    100080: toilet
+    400000: ' 1'
+    400002: bathroom
+    400004: bedroom1
+    400006: bedroom2
+    400008: column1
+    400010: column2
+    400012: //RootNode
+    400014: doorgarage
+    400016: Floor1
+    400018: Floor10
+    400020: Floor11
+    400022: Floor12
+    400024: Floor12_MeshPart0
+    400026: Floor12_MeshPart1
+    400028: Floor2
+    400030: Floor3
+    400032: Floor4
+    400034: Floor5
+    400036: Floor6
+    400038: Floor7
+    400040: Floor8
+    400042: Floor9
+    400044: FloorOut1
+    400046: FloorOut1_MeshPart0
+    400048: FloorOut1_MeshPart1
+    400050: garage
+    400052: gardenOut
+    400054: hall
+    400056: hall2
+    400058: hall3
+    400060: inWall
+    400062: kitchen&livingRoom
+    400064: outWall1
+    400066: outWall14
+    400068: outWall2
+    400070: outWall3
+    400072: outWall5
+    400074: shower
+    400076: stairs1
+    400078: stairs2
+    400080: toilet
+    2300000: ' 1'
+    2300002: bathroom
+    2300004: bedroom1
+    2300006: bedroom2
+    2300008: column1
+    2300010: column2
+    2300012: doorgarage
+    2300014: Floor1
+    2300016: Floor10
+    2300018: Floor11
+    2300020: Floor12_MeshPart0
+    2300022: Floor12_MeshPart1
+    2300024: Floor2
+    2300026: Floor3
+    2300028: Floor4
+    2300030: Floor5
+    2300032: Floor6
+    2300034: Floor7
+    2300036: Floor8
+    2300038: Floor9
+    2300040: FloorOut1_MeshPart0
+    2300042: FloorOut1_MeshPart1
+    2300044: garage
+    2300046: gardenOut
+    2300048: hall
+    2300050: hall2
+    2300052: hall3
+    2300054: inWall
+    2300056: kitchen&livingRoom
+    2300058: outWall1
+    2300060: outWall14
+    2300062: outWall2
+    2300064: outWall3
+    2300066: outWall5
+    2300068: shower
+    2300070: stairs1
+    2300072: stairs2
+    2300074: toilet
+    3300000: ' 1'
+    3300002: bathroom
+    3300004: bedroom1
+    3300006: bedroom2
+    3300008: column1
+    3300010: column2
+    3300012: doorgarage
+    3300014: Floor1
+    3300016: Floor10
+    3300018: Floor11
+    3300020: Floor12_MeshPart0
+    3300022: Floor12_MeshPart1
+    3300024: Floor2
+    3300026: Floor3
+    3300028: Floor4
+    3300030: Floor5
+    3300032: Floor6
+    3300034: Floor7
+    3300036: Floor8
+    3300038: Floor9
+    3300040: FloorOut1_MeshPart0
+    3300042: FloorOut1_MeshPart1
+    3300044: garage
+    3300046: gardenOut
+    3300048: hall
+    3300050: hall2
+    3300052: hall3
+    3300054: inWall
+    3300056: kitchen&livingRoom
+    3300058: outWall1
+    3300060: outWall14
+    3300062: outWall2
+    3300064: outWall3
+    3300066: outWall5
+    3300068: shower
+    3300070: stairs1
+    3300072: stairs2
+    3300074: toilet
+    4300000: garage
+    4300002: doorgarage
+    4300004: inWall
+    4300006: outWall1
+    4300008: gardenOut
+    4300010: bedroom2
+    4300012: outWall2
+    4300014: bedroom1
+    4300016: outWall3
+    4300018: outWall14
+    4300020: column2
+    4300022: outWall5
+    4300024: column1
+    4300026: kitchen&livingRoom
+    4300028: hall
+    4300030: stairs1
+    4300032: stairs2
+    4300034: hall3
+    4300036: hall2
+    4300038: toilet
+    4300040: shower
+    4300042: bathroom
+    4300046: Floor1
+    4300048: Floor2
+    4300050: Floor3
+    4300052: Floor4
+    4300054: Floor5
+    4300056: Floor6
+    4300058: Floor7
+    4300060: Floor8
+    4300062: Floor9
+    4300064: Floor10
+    4300066: Floor11
+    4300068: FloorOut1_MeshPart0
+    4300070: FloorOut1_MeshPart1
+    4300072: Floor12_MeshPart0
+    4300074: Floor12_MeshPart1
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
