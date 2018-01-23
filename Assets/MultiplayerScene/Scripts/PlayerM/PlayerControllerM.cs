@@ -21,6 +21,8 @@ public class PlayerControllerM : NetworkBehaviour
     private bool storageFull;
     private GameObject combine;
 
+    public int PlayerScore;
+
     Ray cameraRay;
     RaycastHit cameraRayHit;
 
@@ -80,6 +82,7 @@ public class PlayerControllerM : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            PlayerScore = Score;
             //Movement
             float hAxis = Input.GetAxis("Horizontal");
             float vAxis = Input.GetAxis("Vertical");

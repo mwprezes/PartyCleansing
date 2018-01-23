@@ -39,8 +39,11 @@ public class FPScamController : MonoBehaviour
             mouseLook.y = Mathf.Clamp(mouseLook.y, -90.0f, 90.0f);
             mouseLook += smoothV;
 
-            transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-            targ.localRotation = Quaternion.AngleAxis(mouseLook.x, targ.up);
+            if (GameObject.Find("Enemy(Clone)").GetComponent<EnemyControllerM>().mouseLock)
+            {
+                transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+                targ.localRotation = Quaternion.AngleAxis(mouseLook.x, targ.up);
+            }
         }
     }
 

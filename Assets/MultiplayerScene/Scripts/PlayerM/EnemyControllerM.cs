@@ -10,19 +10,23 @@ public class EnemyControllerM : NetworkBehaviour
 
     public float speed = 5;
     private Rigidbody rig;
-    private bool mouseLock = true;
+    public bool mouseLock = true;
     private ProgressBar pBar;
+
+    public int EnemyScore;
 
     Rigidbody potentialHeldObj;
     GameObject potTest;
 
     Rigidbody heldObj;
 
+    private Vector3 CamRot;
+    private GameObject door;
     private GameObject storage;
     private bool storageFull;
     private GameObject combine;
 
-    private Vector3 camera_rotate;
+    private Quaternion freezeCamera;
     Ray cameraRay;
     RaycastHit cameraRayHit;
     RaycastHit hit;
@@ -32,6 +36,7 @@ public class EnemyControllerM : NetworkBehaviour
     Lockpicking lockpick;
     void Start()
     {
+        
         Cursor.lockState = CursorLockMode.Locked;
         rig = GetComponent<Rigidbody>();
         //Instantiate(GameObject.Find("Camera FPS"));
@@ -43,7 +48,7 @@ public class EnemyControllerM : NetworkBehaviour
             camera.GetComponent<Camera>().enabled = false;
             return;
         }
-
+        EnemyScore = 0;
         //camera_rotate = new Vector3(-40.0f, 0.0f, 0.0f);
         //Destroy(gameObject.GetComponent<EnemyStates>());
         pBar = GetComponent<ProgressBar>();
@@ -51,6 +56,7 @@ public class EnemyControllerM : NetworkBehaviour
         rig.isKinematic = false;
         rig.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
+        lockpick = GameObject.Find("GlobalScripts").GetComponent<Lockpicking>();
         var follow = camera.GetComponent("FPScamController");
         follow.GetComponent<FPScamController>().targ = this.transform;
         camera.GetComponent<Camera>().enabled = true;
@@ -79,10 +85,17 @@ public class EnemyControllerM : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
+
             if (mouseLock)
+            {
                 Cursor.lockState = CursorLockMode.None;
+                CamRot = camera.transform.eulerAngles;
+            }
             else
+            {
                 Cursor.lockState = CursorLockMode.Locked;
+                camera.transform.eulerAngles = CamRot;
+            }
             mouseLock = !mouseLock;
         }
 
@@ -109,7 +122,11 @@ public class EnemyControllerM : NetworkBehaviour
             //Pasek "searching" czy coś na gui by się przydał
 
             if (store.locked == true)
-                lockpick.SendMessage("Lockpicking_Menu", 4);
+            {
+                lockpick.bound(store);
+                lockpick.SendMessage("lockpick_result", 4);
+            }
+                
 
             if (store.locked == false)
             {
@@ -124,6 +141,11 @@ public class EnemyControllerM : NetworkBehaviour
         {
             pickUp(potentialHeldObj.gameObject);
         }
+        if ((door != null) && (Input.GetKeyDown(KeyCode.F)))
+        {
+            lockpick.bound(door);
+            lockpick.SendMessage("lockpick_result", 6);
+        }
     }
 
     private void OnTriggerEnter(Collider hit)
@@ -135,8 +157,11 @@ public class EnemyControllerM : NetworkBehaviour
                 storage = hit.gameObject;
                 store = storage.GetComponent<StoringItems>();
             }
-
-            if(hit.gameObject.tag == "Pickable")
+            if (hit.gameObject.name == "Door")
+            {
+                door = hit.gameObject;
+            }
+            if (hit.gameObject.tag == "Pickable")
             {
                 if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
                     potentialHeldObj = hit.gameObject.GetComponent<Rigidbody>();
@@ -154,6 +179,11 @@ public class EnemyControllerM : NetworkBehaviour
                 store = storage.GetComponent<StoringItems>();
             }
 
+            if (hit.gameObject.name == "Door")
+            {
+                door = hit.gameObject;
+            }
+
             if (hit.gameObject.tag == "Pickable")
             {
                 if (hit.gameObject.GetComponent<GrabAndDrop>().tag == "Pickable")
@@ -164,6 +194,7 @@ public class EnemyControllerM : NetworkBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        door = null;
         potentialHeldObj = null;
         storage = null;
     }
@@ -213,6 +244,7 @@ public class EnemyControllerM : NetworkBehaviour
     [Command]
     private void CmdBustItem(GameObject body)
     {
+        EnemyScore += body.GetComponent<GrabAndDrop>().Score_for_Item;
         body.GetComponent<GrabAndDrop>().ChgTag("Busted");
     }
 

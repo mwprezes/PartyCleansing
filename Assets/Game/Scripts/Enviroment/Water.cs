@@ -23,7 +23,7 @@ public class Water : MonoBehaviour
 
     private void OnTriggerEnter(Collider hit)
     {
-        Debug.Log("I am water");
+        Debug.Log("I am water");       
     }
 
     private void OnTriggerStay(Collider hit)
