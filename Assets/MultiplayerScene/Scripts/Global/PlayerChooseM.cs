@@ -42,15 +42,17 @@ public class PlayerChooseM : NetworkManager
 
         if (conn.hostId == playerControllerId)
         {
-            Vector3 pos = new Vector3(-7.2f, 6.5f, -30.7f);
-            player = Instantiate(characters[0], pos, startPos.rotation) as GameObject;
-        }
-        else
-        {
             Vector3 pos = new Vector3(15.5f, 5.6f, -23.2f);
             host_id = playerControllerId;
             Debug.Log("HostID: " + playerControllerId);
             player = Instantiate(characters[1], pos, Quaternion.identity) as GameObject;
+        }
+        else
+        {
+
+
+            Vector3 pos = new Vector3(-7.2f, 6.5f, -30.7f);
+            player = Instantiate(characters[0], pos, startPos.rotation) as GameObject;
 
         }
 
